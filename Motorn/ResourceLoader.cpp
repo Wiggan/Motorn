@@ -1,7 +1,9 @@
 #include "ResourceLoader.h"
 
-std::map<std::string, Mesh*> ResourceLoader::meshes;
-D3dSpriteStuff ResourceLoader::stuff;
+MeshMap ResourceLoader::mMeshes;
+ShaderMap ResourceLoader::mShaders;
+FilesMap ResourceLoader::mFilesToCheck;
+D3dStuff ResourceLoader::mStuff;
 
 ResourceLoader::ResourceLoader() {
 }
@@ -10,35 +12,78 @@ ResourceLoader::ResourceLoader() {
 ResourceLoader::~ResourceLoader() {
 }
 
-Mesh* ResourceLoader::getMesh(const std::string &meshName) {
+Drawable** ResourceLoader::getMesh(const std::string &mMeshName) {
 	using namespace std;
-	map<string, Mesh*>::iterator it = meshes.find(meshName);
-	Mesh* mesh;
-	if ( it == meshes.end() ) {
-		mesh = new Mesh(stuff, "..\\assets\\models\\" + meshName + ".obj");
-		meshes.insert(pair<string, Mesh*>(meshName, mesh));
+	string fileName = "..\\assets\\models\\" + mMeshName + ".obj";
+	MeshMap::iterator it = mMeshes.find(mMeshName);
+	Drawable** mesh;
+	if ( it == mMeshes.end() ) {
+		mesh = new Drawable*;
+		*mesh = new Mesh(mStuff, fileName);
+		mMeshes.insert(pair<string, Drawable**>(mMeshName, mesh));
+		mFilesToCheck.insert(pair<FileInfo, TimeStamp>(FileInfo(fileName, mMeshName, MESH), getFileTimeStamp(fileName)));
 	} else {
 		mesh = it->second;
 	}
 	return mesh;
 }
 
-void ResourceLoader::init(const D3dSpriteStuff &s) {
-	stuff = D3dSpriteStuff(s);
+Shader* ResourceLoader::getShader(const std::string &pShaderName) {
+	using namespace std;
+	string fileName = "..\\assets\\shaders\\" + pShaderName + ".hlsl";
+	ShaderMap::iterator it = mShaders.find(pShaderName);
+	Shader* shader;
+	if ( it == mShaders.end() ) {
+		shader = new Shader(mStuff, fileName);
+		mShaders.insert(pair<string, Shader*>(pShaderName, shader));
+		FileInfo info(fileName, pShaderName, SHADER);
+		mFilesToCheck.insert(pair<FileInfo, TimeStamp>(info, getFileTimeStamp(fileName)));
+	} else {
+		shader = it->second;
+	}
+	return shader;
 }
 
-struct timestamp {
-	short year;
-	short month;
-	short day;
-	short hour;
-	short minute;
-	short second;
-};
+void ResourceLoader::init(const D3dStuff &s) {
+	mStuff = D3dStuff(s);
+
+}
 
 
-timestamp GetFileTimeStamp(const std::string & _Path) {
-	timestamp timestamp;
+
+void ResourceLoader::checkForChangedResources() {
+	for ( auto it = mFilesToCheck.begin(); it != mFilesToCheck.end(); it++ ) {
+		TimeStamp now = getFileTimeStamp(it->first.completePath);
+		if ( it->second != now ) {
+			it->second = now;
+			switch ( it->first.type ) {
+			case SHADER: {
+				std::cout << "Shader changed! Reloading " << it->first.completePath << std::endl;
+				mShaders.erase(it->first.name);
+				getShader(it->first.name)->load();
+				break;
+			}
+			case MESH: {
+				std::cout << "Mesh changed! Reloading " << it->first.completePath << std::endl;
+				Drawable** mesh = mMeshes.find(it->first.name)->second;
+				mMeshes.find(it->first.name)->second = NULL;
+				mMeshes.erase(it->first.name);
+				*mesh = *getMesh(it->first.name);
+				mMeshes.find(it->first.name)->second = mesh;
+				break;
+			}
+			default:
+				std::cout << "File changed! Doing nothing for " << it->first.completePath << std::endl;
+				break;
+			}
+		}
+	}
+}
+
+
+
+TimeStamp ResourceLoader::getFileTimeStamp(const std::string &pPath) {
+	TimeStamp timestamp;
 
 	// set default values
 	timestamp.year = -1;
@@ -48,11 +93,11 @@ timestamp GetFileTimeStamp(const std::string & _Path) {
 	timestamp.minute = -1;
 	timestamp.second = -1;
 
-#ifdef __WINDOWS__
+
 	HANDLE hFile = 0;
 	FILETIME create, access, time;
 
-	hFile = CreateFile(_Path.c_str(), GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0);
+	hFile = CreateFile(pPath.c_str(), GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0);
 
 	if ( hFile != INVALID_HANDLE_VALUE ) {
 		GetFileTime(hFile, &create, &access, &time);
@@ -69,8 +114,6 @@ timestamp GetFileTimeStamp(const std::string & _Path) {
 		timestamp.minute = (short)systemTime.wMinute;
 		timestamp.second = (short)systemTime.wSecond;
 	}
-#else
-#endif
 
 	return timestamp;
 }

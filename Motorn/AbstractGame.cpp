@@ -182,68 +182,33 @@ void AbstractGame::renderFrame(double delta)
 	swapchain->Present(0, 0);
 }
 
+int checkForChangedResources(void *ptr) {
+	while ( true ) {
+		Sleep(1000.0f);
+		ResourceLoader::checkForChangedResources();
+	}
+	return 0;
+}
+
 bool AbstractGame::pipelineInit()
 {
-	using namespace std;
-
-	// Load shader file
-	ifstream ifs("..\\Motorn\\shaders\\shaders.hlsl", std::ios::binary);
-	ifs.seekg(0, std::ios_base::end);
-	int size = 1 + ifs.tellg();
-	ifs.seekg(0, std::ios_base::beg);
-	char* shader = new char[size];
-	for (int i = 0; i < size; i++) {
-		shader[i] = 0;
-	}
-	shader[size - 1] = '\0';
-	ifs.read(shader, size);
-
-	if (size == 0) {
-		cout << "File is empty!" << endl;
-		return false;
-	}
-	//else {
-	//	cout << shader << endl << size << " bytes" << endl ;
-	//}
-
-	// Compile shaders
-	ID3D10Blob *VS, *PS, *error = NULL;
-	D3DCompile(shader, size, NULL, NULL, NULL, "VShader", "vs_5_0", 0, 0, &VS, &error);
-	if (error != NULL && error->GetBufferSize() > 0) {
-		char* err = (char*)malloc(error->GetBufferSize());
-		memcpy(err, error->GetBufferPointer(), error->GetBufferSize());
-		cout << err << endl;
-		free(err);
-	}
-	error = NULL;
-	D3DCompile(shader, size, NULL, NULL, NULL, "PShader", "ps_5_0", 0, 0, &PS, &error);
-	if (error != NULL &&  error->GetBufferSize() > 0) {
-		char* err = (char*)malloc(error->GetBufferSize());
-		memcpy(err, error->GetBufferPointer(), error->GetBufferSize());
-		cout << err << endl;
-		free(err);
-	}
-	delete shader;
-
-	// encapsulate both shaders into shader objects
-	dev->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS); 
-	dev->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &pPS);
-
-	// set the shader objects
-	devcon->VSSetShader(pVS, 0, 0);
-	devcon->PSSetShader(pPS, 0, 0);
-
-
-	// Setup vertex input layout
-	dev->CreateInputLayout(ied, sizeof(ied) / sizeof(*ied), VS->GetBufferPointer(), VS->GetBufferSize(), &pLayout);
-	devcon->IASetInputLayout(pLayout);
-
-	D3dSpriteStuff stuff;
+	D3dStuff stuff;
 	stuff.dev = dev;
 	stuff.devcon = devcon;
-	stuff.pVS = pVS;
-	stuff.pPS = pPS;
 	ResourceLoader::init(stuff);
+	ResourceLoader::getShader("shaders")->load();
+
+	SDL_Thread *thread;
+
+	// Simply create a thread
+	thread = SDL_CreateThread(checkForChangedResources, "ResourceCheckThread", (void *)NULL);
+
+	if ( NULL == thread ) {
+		std::cout << "Failed creating SDL thread for resource checking: " << SDL_GetError() << std::endl;
+	}
+
+
+
 	return true;
 }
 DirectX::XMINT2 AbstractGame::getWindowSize()
@@ -369,10 +334,7 @@ void AbstractGame::cleanD3D()
 		backbuffer->Release();
 	if (devcon != nullptr)
 		devcon->Release();
-	if (pVS != nullptr)
-		pVS->Release();
-	if (pPS != nullptr)
-		pPS->Release();
+	
 }
 
 

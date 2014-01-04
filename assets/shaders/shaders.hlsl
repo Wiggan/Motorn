@@ -31,6 +31,8 @@ VOut VShader(float4 position : POSITION, float4 color : COLOR, float4 normal : N
 	output.normal = mul(normal, worldMatrix);
 	
 	output.color = color;
+	//output.color = color*0;
+	output.color[0] = 0.0f;
 	//output.uv = uv;
 
 	return output;

@@ -14,4 +14,7 @@
 
 # Other local junk
 Debug
-assets
+assets/models
+assets/textures
+*.ilk
+*.pdb

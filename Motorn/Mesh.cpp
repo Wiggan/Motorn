@@ -10,14 +10,12 @@
 #include <stdlib.h> 
 #include "Camera.h"
 
-Mesh::Mesh(D3dSpriteStuff &stuff, const std::string &filename)
+Mesh::Mesh(D3dStuff &stuff, const std::string &filename)
 {
 	using namespace DirectX;
 	using namespace std;
 	dev = stuff.dev;
 	devcon = stuff.devcon;
-	pPS = stuff.pPS;
-	pVS = stuff.pVS;
 
 	ifstream ifs;
 	ifs.open(filename);

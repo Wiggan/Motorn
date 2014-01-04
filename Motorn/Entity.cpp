@@ -1,7 +1,7 @@
 #include "Entity.h"
 
 
-Entity::Entity(const std::string &pName, Drawable* pDrawable) : mName(pName), mDrawable(pDrawable) {
+Entity::Entity(const std::string &pName, Drawable** pDrawable) : mName(pName), mDrawable(pDrawable) {
 	using namespace DirectX;
 	std::vector<Entity*> children();
 	mUpdate = true;
@@ -33,7 +33,7 @@ void Entity::draw() {
 	if ( mDrawable != NULL )  {
 		XMFLOAT4X4 transform;
 		XMStoreFloat4x4(&transform, XMLoadFloat4x4(&mParentTransform)*XMLoadFloat4x4(&getTransform()));
-		mDrawable->draw(transform);
+		(*mDrawable)->draw(transform);
 	} else {
 		getTransform(); // Update anyway, gotta do that shit, but probably elsewhere
 	}

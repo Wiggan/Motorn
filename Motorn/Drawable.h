@@ -4,10 +4,8 @@
 
 class Drawable {
 protected:
-	ID3D11Device *dev;                     // the pointer to our Direct3D device interface
-	ID3D11DeviceContext *devcon;           // the pointer to our Direct3D device context
-	ID3D11VertexShader *pVS;    // the vertex shader
-	ID3D11PixelShader *pPS;     // the pixel shader
+	ID3D11Device *dev;
+	ID3D11DeviceContext *devcon;
 	ID3D11Buffer *pVBuffer;
 	ID3D11Buffer *iBuffer;
 	ShaderConstants constants;

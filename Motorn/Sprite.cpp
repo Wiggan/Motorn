@@ -3,13 +3,11 @@
 #include <vector>
 
 
-Sprite::Sprite(D3dSpriteStuff &stuff)
+Sprite::Sprite(D3dStuff &stuff)
 {
 	using namespace DirectX;
 	dev = stuff.dev;
 	devcon = stuff.devcon;
-	pPS = stuff.pPS;
-	pVS = stuff.pVS;
 
 	VERTEX OurVertices[] =
 	{

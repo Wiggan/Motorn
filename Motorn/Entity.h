@@ -11,14 +11,14 @@ private:
 	DirectX::XMFLOAT3 mScale;
 	DirectX::XMFLOAT4X4 mTransform;
 	DirectX::XMFLOAT4X4 mParentTransform;
-	Drawable* mDrawable;
+	Drawable** mDrawable;
 	std::vector<Entity*> mChildren;
 	Entity* mParent;
 	bool mUpdate;
 	bool mParentUpdate;
 	std::string mName;
 public:
-	Entity(const std::string &pName, Drawable* pDrawable);
+	Entity(const std::string &pName, Drawable** pDrawable);
 	Entity() : Entity("", NULL) {}
 	~Entity();
 	void add(Entity &pChild);

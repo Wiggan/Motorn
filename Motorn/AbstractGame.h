@@ -33,9 +33,8 @@ private:
 	ID3D11DepthStencilState* depthStencilState;
 	ID3D11DepthStencilView* depthStencilView;
 	HWND hwnd;
-	ID3D11VertexShader *pVS;    // the vertex shader
-	ID3D11PixelShader *pPS;     // the pixel shader
-	ID3D11InputLayout *pLayout;
+
+
 	int mouseX;
 	int mouseY;
 protected:
