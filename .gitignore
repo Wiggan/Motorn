@@ -18,3 +18,4 @@ assets/models
 assets/textures
 *.ilk
 *.pdb
+*.exe

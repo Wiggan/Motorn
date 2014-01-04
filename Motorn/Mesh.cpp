@@ -30,63 +30,65 @@ Mesh::Mesh(D3dStuff &stuff, const std::string &filename)
 		string line;
 		while (getline(ifs, line)) {
 			//cout << line << endl;
+			if ( line.size() > 0  && line.compare(0, 1, "#")) {
 
-			istringstream iss(line);
-			vector<string> tokens;
-			copy(istream_iterator<string>(iss),
-				istream_iterator<string>(),
-				back_inserter<vector<string> >(tokens));
-			if ( strcmp("v", tokens[0].c_str()) == 0 ) {
-				XMFLOAT3 v;
-				v.x = atof(tokens[1].c_str());
-				v.y = atof(tokens[2].c_str());
-				v.z = atof(tokens[3].c_str());
-				//v.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-				//cout << "Adding a vertex: " << tokens[0] << " " << v.X << " " << v.Y << " " << v.Z << endl;
-				positions.push_back(v);
-			} else if ( strcmp("vt", tokens[0].c_str()) == 0 ) {
-				XMFLOAT2 vt;
-				vt.x = atof(tokens[1].c_str());
-				vt.y = atof(tokens[2].c_str());
-				//cout << "Adding a vertex: " << tokens[0] << " " << v.X << " " << v.Y << " " << v.Z << endl;
-				uvs.push_back(vt);
-			} else if ( strcmp("vn", tokens[0].c_str()) == 0 ) {
-					XMFLOAT3 vn;
-					vn.x = atof(tokens[1].c_str());
-					vn.y = atof(tokens[2].c_str());
-					vn.z = atof(tokens[3].c_str());
+				istringstream iss(line);
+				vector<string> tokens;
+				copy(istream_iterator<string>(iss),
+					istream_iterator<string>(),
+					back_inserter<vector<string> >(tokens));
+				if ( strcmp("v", tokens[0].c_str()) == 0 ) {
+					XMFLOAT3 v;
+					v.x = atof(tokens[1].c_str());
+					v.y = atof(tokens[2].c_str());
+					v.z = atof(tokens[3].c_str());
+					//v.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 					//cout << "Adding a vertex: " << tokens[0] << " " << v.X << " " << v.Y << " " << v.Z << endl;
-					normals.push_back(vn);
-			} else if ( strcmp( "f", tokens[0].c_str() ) == 0 ) {
+					positions.push_back(v);
+				} else if ( strcmp("vt", tokens[0].c_str()) == 0 ) {
+					XMFLOAT2 vt;
+					vt.x = atof(tokens[1].c_str());
+					vt.y = atof(tokens[2].c_str());
+					//cout << "Adding a vertex: " << tokens[0] << " " << v.X << " " << v.Y << " " << v.Z << endl;
+					uvs.push_back(vt);
+				} else if ( strcmp("vn", tokens[0].c_str()) == 0 ) {
+						XMFLOAT3 vn;
+						vn.x = atof(tokens[1].c_str());
+						vn.y = atof(tokens[2].c_str());
+						vn.z = atof(tokens[3].c_str());
+						//cout << "Adding a vertex: " << tokens[0] << " " << v.X << " " << v.Y << " " << v.Z << endl;
+						normals.push_back(vn);
+				} else if ( strcmp( "f", tokens[0].c_str() ) == 0 ) {
 
-				for ( int i = 1; i < tokens.size(); i++ ) {
-					//Check for / indexes
-					string face = tokens[i];
-					int firstSlash = face.find_first_of("/");
-					int lastSlash = face.find_last_of("/");
+					for ( int i = 1; i < tokens.size(); i++ ) {
+						//Check for / indexes
+						string face = tokens[i];
+						int firstSlash = face.find_first_of("/");
+						int lastSlash = face.find_last_of("/");
 
-					VERTEX vertex;
-					vertex.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-					vertex.Position = positions[atoi(face.substr(0, firstSlash).c_str()) - 1];
+						VERTEX vertex;
+						vertex.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+						vertex.Position = positions[atoi(face.substr(0, firstSlash).c_str()) - 1];
 					
-					if ( firstSlash != -1 && lastSlash != firstSlash + 1 ) {
-						string uvIndex = face.substr(firstSlash + 1, lastSlash);
-						if ( uvIndex.size() > 0 ) {
-							vertex.UV = uvs[atoi(uvIndex.c_str()) - 1];
+						if ( firstSlash != -1 && lastSlash != firstSlash + 1 ) {
+							string uvIndex = face.substr(firstSlash + 1, lastSlash);
+							if ( uvIndex.size() > 0 ) {
+								vertex.UV = uvs[atoi(uvIndex.c_str()) - 1];
+							}
 						}
-					}
 					
-					if ( firstSlash != -1 && lastSlash != -1 && firstSlash != lastSlash ) {
-						string normalIndex = face.substr(lastSlash + 1);
-						if ( normalIndex.size() > 0 ) {
-							vertex.Normal = normals[atoi(normalIndex.c_str()) - 1];
+						if ( firstSlash != -1 && lastSlash != -1 && firstSlash != lastSlash ) {
+							string normalIndex = face.substr(lastSlash + 1);
+							if ( normalIndex.size() > 0 ) {
+								vertex.Normal = normals[atoi(normalIndex.c_str()) - 1];
+							}
 						}
-					}
 
-					vertices.push_back(vertex);
-					vertexIndices.push_back(vertexIndices.size());
+						vertices.push_back(vertex);
+						vertexIndices.push_back(vertexIndices.size());
+					}
+					cout << "Adding a face: " << tokens[0] << " " << tokens[1] << " " << tokens[2] << " " << tokens[3] << endl;
 				}
-				cout << "Adding a face: " << tokens[0] << " " << tokens[1] << " " << tokens[2] << " " << tokens[3] << endl;
 			}
 		}
 		

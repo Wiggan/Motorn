@@ -68,8 +68,12 @@ void ResourceLoader::checkForChangedResources() {
 				Drawable** mesh = mMeshes.find(it->first.name)->second;
 				mMeshes.find(it->first.name)->second = NULL;
 				mMeshes.erase(it->first.name);
-				*mesh = *getMesh(it->first.name);
-				mMeshes.find(it->first.name)->second = mesh;
+				//try {
+					*mesh = *getMesh(it->first.name);
+					mMeshes.find(it->first.name)->second = mesh;
+				/*} catch ( const std::exception &e ) {
+					std::cout << "Failed loading new version, keeping the old of " << it->first.completePath << std::endl;
+				}*/
 				break;
 			}
 			default:
