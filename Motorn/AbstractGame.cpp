@@ -54,10 +54,6 @@ void AbstractGame::initD3D(HWND hWnd)
 	dev->CreateRenderTargetView(pBackBuffer, NULL, &backbuffer);
 	pBackBuffer->Release();
 
-
-
-
-
 	HRESULT hr;
 	D3D11_TEXTURE2D_DESC depthBufferDesc;
 	// Initialize the description of the depth buffer.
@@ -172,9 +168,10 @@ void AbstractGame::initD3D(HWND hWnd)
 }
 void AbstractGame::renderFrame(double delta)
 {
-	devcon->ClearRenderTargetView(backbuffer, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+	static const FLOAT clearColor[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
+	devcon->ClearRenderTargetView(backbuffer, clearColor);
 	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);;
-	static float total = delta;
+	static double total = delta;
 	total += delta;
 	mWorld.update(delta);
 	mWorld.setRotation(DirectX::XMFLOAT3(total/1000, 0.0f, 0.0f));

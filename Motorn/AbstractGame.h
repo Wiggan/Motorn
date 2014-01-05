@@ -1,8 +1,6 @@
 #pragma once
 #include <windows.h>
 #include <d3d11.h>
-#include <d3dx11.h>
-#include <d3dx10.h>
 #include <iostream>
 #include <string>
 #include "SDL.h"

@@ -10,16 +10,18 @@
 #include <stdlib.h> 
 #include "Camera.h"
 
-Mesh::Mesh(D3dStuff &stuff, const std::string &filename)
+Mesh::Mesh(D3dStuff &stuff, const std::string &filename, std::vector<Texture*> pTextures)
 {
 	using namespace DirectX;
 	using namespace std;
 	dev = stuff.dev;
 	devcon = stuff.devcon;
-
+	mTextures = pTextures;
+	for ( auto it = pTextures.begin(); it != pTextures.end(); it++ ) {
+		mTextureViews.push_back((*it)->getTextureView());
+	}
 	ifstream ifs;
 	ifs.open(filename);
-
 	vector<VERTEX> vertices(0);
 	vector<uint16_t> vertexIndices(0);
 	vector<XMFLOAT3> positions(0);
@@ -146,6 +148,9 @@ Mesh::Mesh(D3dStuff &stuff, const std::string &filename)
 	}
 }
 
+std::vector<Texture*> Mesh::getTextures() {
+	return mTextures;
+}
 
 Mesh::~Mesh()
 {
@@ -163,12 +168,12 @@ void Mesh::draw(const DirectX::XMFLOAT4X4 &transform)
 	constants.color[2] = 1.0f;
 	constants.color[3] = 1.0f;
 	setShaderConstants(constants);
-
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
 	devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
 	devcon->IASetIndexBuffer( iBuffer, DXGI_FORMAT_R16_UINT, 0 );
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	devcon->PSSetShaderResources(0, 1, &mTextureViews[0]);
 	devcon->DrawIndexed(n, 0, 0);
 }
 

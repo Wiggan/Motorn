@@ -7,7 +7,6 @@ protected:
 	ID3D11Device *dev;
 	ID3D11DeviceContext *devcon;
 	ID3D11Buffer *pVBuffer;
-	ID3D11Buffer *iBuffer;
 	ShaderConstants constants;
 	bool setShaderConstants(const ShaderConstants &constants) {
 		D3D11_BUFFER_DESC bd;
@@ -43,7 +42,6 @@ protected:
 		// Finanly set the constant buffer in the vertex shader with the updated values.
 		devcon->PSSetConstantBuffers(0, 1, &buffer);
 		devcon->VSSetConstantBuffers(0, 1, &buffer);
-
 		return true;
 	}
 public:

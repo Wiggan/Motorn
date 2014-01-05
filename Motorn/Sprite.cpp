@@ -72,7 +72,6 @@ void Sprite::draw(const DirectX::XMFLOAT4X4 &transform)
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
 	devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
-	devcon->IASetIndexBuffer(iBuffer, DXGI_FORMAT_R16_UINT, 0);
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	devcon->Draw(4, 0); 
 }

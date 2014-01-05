@@ -1,6 +1,7 @@
 #include "ResourceLoader.h"
 
-MeshMap ResourceLoader::mMeshes;
+DrawableMap ResourceLoader::mMeshes;
+TextureMap ResourceLoader::mTextures;
 ShaderMap ResourceLoader::mShaders;
 FilesMap ResourceLoader::mFilesToCheck;
 D3dStuff ResourceLoader::mStuff;
@@ -12,16 +13,33 @@ ResourceLoader::ResourceLoader() {
 ResourceLoader::~ResourceLoader() {
 }
 
-Drawable** ResourceLoader::getMesh(const std::string &mMeshName) {
+Texture* ResourceLoader::getTexture(const std::string &pTextureName) {
 	using namespace std;
-	string fileName = "..\\assets\\models\\" + mMeshName + ".obj";
-	MeshMap::iterator it = mMeshes.find(mMeshName);
+	string fileName = "..\\assets\\textures\\" + pTextureName + ".bmp";
+	TextureMap::iterator it = mTextures.find(pTextureName);
+	Texture* texture;
+	if ( it == mTextures.end() ) {
+		texture = new Texture(mStuff, fileName);
+		mTextures.insert(pair<string, Texture*>(pTextureName, texture));
+		FileInfo info(fileName, pTextureName, TEXTURE);
+		mFilesToCheck.insert(pair<FileInfo, TimeStamp>(info, getFileTimeStamp(fileName)));
+	} else {
+		texture = it->second;
+	}
+	return texture;
+}
+
+Drawable** ResourceLoader::getMesh(const std::string &pMeshName, std::vector<Texture*> pTextures) {
+	using namespace std;
+	string fileName = "..\\assets\\models\\" + pMeshName + ".obj";
+	DrawableMap::iterator it = mMeshes.find(pMeshName);
 	Drawable** mesh;
+	
 	if ( it == mMeshes.end() ) {
 		mesh = new Drawable*;
-		*mesh = new Mesh(mStuff, fileName);
-		mMeshes.insert(pair<string, Drawable**>(mMeshName, mesh));
-		mFilesToCheck.insert(pair<FileInfo, TimeStamp>(FileInfo(fileName, mMeshName, MESH), getFileTimeStamp(fileName)));
+		*mesh = new Mesh(mStuff, fileName, pTextures);
+		mMeshes.insert(pair<string, Drawable**>(pMeshName, mesh));
+		mFilesToCheck.insert(pair<FileInfo, TimeStamp>(FileInfo(fileName, pMeshName, MESH), getFileTimeStamp(fileName)));
 	} else {
 		mesh = it->second;
 	}
@@ -67,13 +85,10 @@ void ResourceLoader::checkForChangedResources() {
 				std::cout << "Mesh changed! Reloading " << it->first.completePath << std::endl;
 				Drawable** mesh = mMeshes.find(it->first.name)->second;
 				mMeshes.find(it->first.name)->second = NULL;
+				std::vector<Texture*> textures = ((Mesh*)(*mesh))->getTextures();
 				mMeshes.erase(it->first.name);
-				//try {
-					*mesh = *getMesh(it->first.name);
-					mMeshes.find(it->first.name)->second = mesh;
-				/*} catch ( const std::exception &e ) {
-					std::cout << "Failed loading new version, keeping the old of " << it->first.completePath << std::endl;
-				}*/
+				*mesh = *getMesh(it->first.name, textures);
+				mMeshes.find(it->first.name)->second = mesh;
 				break;
 			}
 			default:

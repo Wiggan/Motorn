@@ -1,9 +1,11 @@
 #pragma once
 #include "Mesh.h"
 #include "Shader.h"
+#include "Texture.h"
 #include <unordered_map>
 #include <map>
 #include <string>
+
 
 struct TimeStamp {
 
@@ -23,6 +25,7 @@ struct TimeStamp {
 enum ResourceType {
 	SHADER,
 	MESH,
+	TEXTURE,
 };
 
 struct FileInfo {
@@ -41,20 +44,23 @@ struct FileInfo {
 	ResourceType type;
 };
 
-typedef std::unordered_map<std::string, Drawable**> MeshMap;
+typedef std::unordered_map<std::string, Drawable**> DrawableMap;
+typedef std::unordered_map<std::string, Texture*> TextureMap;
 typedef std::unordered_map<std::string, Shader*> ShaderMap;
 typedef std::map<FileInfo, TimeStamp> FilesMap;
 
 
 class ResourceLoader {
-	static MeshMap mMeshes;
+	static DrawableMap mMeshes;
+	static TextureMap mTextures;
 	static ShaderMap mShaders;
 	static FilesMap mFilesToCheck;
 	static TimeStamp getFileTimeStamp(const std::string &pPath);
-public:
 	static D3dStuff mStuff;
-	static Drawable** getMesh(const std::string &pMesh);
-	static Shader* getShader(const std::string &pShader);
+public:
+	static Drawable** getMesh(const std::string &pMeshName, std::vector<Texture*> pTextures);
+	static Texture* getTexture(const std::string &pTextureName);
+	static Shader* getShader(const std::string &pShaderName);
 	static void init(const D3dStuff &pStuff);
 	static void checkForChangedResources();
 	ResourceLoader();

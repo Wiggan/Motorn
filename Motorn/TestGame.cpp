@@ -11,9 +11,11 @@ TestGame::~TestGame() {
 void TestGame::setupWorld() {
 	using namespace DirectX;
 	mWorld = Entity("World", NULL);
-	Entity* child1 = new Entity("Child1", ResourceLoader::getMesh("box"));
-	Entity* child2 = new Entity("Child2", ResourceLoader::getMesh("box"));
-	Entity* child3 = new Entity("Child3", ResourceLoader::getMesh("box"));
+	std::vector<Texture*> textures;
+	textures.push_back(ResourceLoader::getTexture("bark"));
+	Entity* child1 = new Entity("Child1", ResourceLoader::getMesh("box3", textures));
+	Entity* child2 = new Entity("Child2", ResourceLoader::getMesh("box3", textures));
+	Entity* child3 = new Entity("Child3", ResourceLoader::getMesh("box3", textures));
 	child2->setScale(XMFLOAT3(0.3f, 0.3f, 0.3f));
 	child2->setPosition(XMFLOAT3(0.0f, 3.0f, 0.0f));
 	child3->setScale(XMFLOAT3(0.3f, 0.3f, 0.3f));
