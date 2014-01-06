@@ -1,7 +1,9 @@
 #pragma once
 #include "Mesh.h"
+#include "Sprite.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "MaterialResource.h"
 #include <unordered_map>
 #include <map>
 #include <string>
@@ -26,13 +28,12 @@ enum ResourceType {
 	SHADER,
 	MESH,
 	TEXTURE,
+	MATERIAL,
 };
 
 struct FileInfo {
 	FileInfo(const std::string &pCompletePath, const std::string &pName, ResourceType pType) :
-	completePath(pCompletePath), name(pName), type(pType) {
-
-	}
+	completePath(pCompletePath), name(pName), type(pType) {}
 	bool operator<(const FileInfo &other) {
 		return name < other.name;
 	}
@@ -46,6 +47,7 @@ struct FileInfo {
 
 typedef std::unordered_map<std::string, Drawable**> DrawableMap;
 typedef std::unordered_map<std::string, Texture*> TextureMap;
+typedef std::unordered_map<std::string, MaterialResource**> MaterialMap;
 typedef std::unordered_map<std::string, Shader*> ShaderMap;
 typedef std::map<FileInfo, TimeStamp> FilesMap;
 
@@ -53,18 +55,21 @@ typedef std::map<FileInfo, TimeStamp> FilesMap;
 class ResourceLoader {
 	static DrawableMap mMeshes;
 	static TextureMap mTextures;
+	static MaterialMap mMaterials;
 	static ShaderMap mShaders;
 	static FilesMap mFilesToCheck;
 	static TimeStamp getFileTimeStamp(const std::string &pPath);
 	static D3dStuff mStuff;
 public:
-	static Drawable** getMesh(const std::string &pMeshName, std::vector<Texture*> pTextures);
+	static Drawable** getMesh(const std::string &pMeshName, std::vector<Texture*> pTextures, MaterialResource** pMaterialResource);
+	static MaterialResource** getMaterial(const std::string &pMaterialName);
 	static Texture* getTexture(const std::string &pTextureName);
 	static Shader* getShader(const std::string &pShaderName);
+	static Drawable** getSprite(Texture* pTexture);
 	static void init(const D3dStuff &pStuff);
 	static void checkForChangedResources();
-	ResourceLoader();
-	~ResourceLoader();
+	ResourceLoader() {}
+	~ResourceLoader() {}
 
 };
 

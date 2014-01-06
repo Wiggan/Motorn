@@ -2,16 +2,10 @@
 
 DrawableMap ResourceLoader::mMeshes;
 TextureMap ResourceLoader::mTextures;
+MaterialMap ResourceLoader::mMaterials;
 ShaderMap ResourceLoader::mShaders;
 FilesMap ResourceLoader::mFilesToCheck;
 D3dStuff ResourceLoader::mStuff;
-
-ResourceLoader::ResourceLoader() {
-}
-
-
-ResourceLoader::~ResourceLoader() {
-}
 
 Texture* ResourceLoader::getTexture(const std::string &pTextureName) {
 	using namespace std;
@@ -29,7 +23,7 @@ Texture* ResourceLoader::getTexture(const std::string &pTextureName) {
 	return texture;
 }
 
-Drawable** ResourceLoader::getMesh(const std::string &pMeshName, std::vector<Texture*> pTextures) {
+Drawable** ResourceLoader::getMesh(const std::string &pMeshName, std::vector<Texture*> pTextures, MaterialResource** pMaterialResource) {
 	using namespace std;
 	string fileName = "..\\assets\\models\\" + pMeshName + ".obj";
 	DrawableMap::iterator it = mMeshes.find(pMeshName);
@@ -37,7 +31,7 @@ Drawable** ResourceLoader::getMesh(const std::string &pMeshName, std::vector<Tex
 	
 	if ( it == mMeshes.end() ) {
 		mesh = new Drawable*;
-		*mesh = new Mesh(mStuff, fileName, pTextures);
+		*mesh = new Mesh(mStuff, fileName, pTextures, pMaterialResource);
 		mMeshes.insert(pair<string, Drawable**>(pMeshName, mesh));
 		mFilesToCheck.insert(pair<FileInfo, TimeStamp>(FileInfo(fileName, pMeshName, MESH), getFileTimeStamp(fileName)));
 	} else {
@@ -45,7 +39,22 @@ Drawable** ResourceLoader::getMesh(const std::string &pMeshName, std::vector<Tex
 	}
 	return mesh;
 }
+MaterialResource** ResourceLoader::getMaterial(const std::string &pMaterialName) {
+	using namespace std;
+	string fileName = "..\\assets\\materials\\" + pMaterialName + ".mtl";
+	MaterialMap::iterator it = mMaterials.find(pMaterialName);
+	MaterialResource** material;
 
+	if ( it == mMaterials.end() ) {
+		material = new MaterialResource*;
+		*material = new MaterialResource(fileName);
+		mMaterials.insert(pair<string, MaterialResource**>(pMaterialName, material));
+		mFilesToCheck.insert(pair<FileInfo, TimeStamp>(FileInfo(fileName, pMaterialName, MATERIAL), getFileTimeStamp(fileName)));
+	} else {
+		material = it->second;
+	}
+	return material;
+}
 Shader* ResourceLoader::getShader(const std::string &pShaderName) {
 	using namespace std;
 	string fileName = "..\\assets\\shaders\\" + pShaderName + ".hlsl";
@@ -60,6 +69,11 @@ Shader* ResourceLoader::getShader(const std::string &pShaderName) {
 		shader = it->second;
 	}
 	return shader;
+}
+Drawable** ResourceLoader::getSprite(Texture* pTexture) {
+	Drawable** leak = new Drawable*;
+	(*leak) = new Sprite(mStuff, pTexture);
+	return leak;
 }
 
 void ResourceLoader::init(const D3dStuff &s) {
@@ -81,13 +95,22 @@ void ResourceLoader::checkForChangedResources() {
 				getShader(it->first.name)->load();
 				break;
 			}
+			case MATERIAL: {
+				std::cout << "Material changed! Reloading " << it->first.completePath << std::endl;
+				MaterialResource** material = mMaterials.find(it->first.name)->second;
+				mMaterials.erase(it->first.name);
+				*material = *getMaterial(it->first.name);
+				mMaterials.find(it->first.name)->second = material;
+				break;
+			}
 			case MESH: {
 				std::cout << "Mesh changed! Reloading " << it->first.completePath << std::endl;
 				Drawable** mesh = mMeshes.find(it->first.name)->second;
 				mMeshes.find(it->first.name)->second = NULL;
 				std::vector<Texture*> textures = ((Mesh*)(*mesh))->getTextures();
+				MaterialResource** material = ((Mesh*)(*mesh))->getMaterial();
 				mMeshes.erase(it->first.name);
-				*mesh = *getMesh(it->first.name, textures);
+				*mesh = *getMesh(it->first.name, textures, material);
 				mMeshes.find(it->first.name)->second = mesh;
 				break;
 			}

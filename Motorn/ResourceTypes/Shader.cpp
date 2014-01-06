@@ -2,8 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include "D3Dcompiler.h"
-#include "Structs.h"
-#include "Vertex.h"
+#include "../Structs.h"
+#include "../Vertex.h"
 
 Shader::Shader(D3dStuff &pStuff, const std::string &pFileName) {
 	using namespace std;
@@ -48,7 +48,6 @@ void Shader::load() {
 		cout << err << endl;
 		free(err);
 	}
-	
 	dev->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &mVertexShader);
 	devcon->VSSetShader(mVertexShader, 0, 0);
 	dev->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &mPixelShader);
@@ -56,6 +55,7 @@ void Shader::load() {
 	ID3D11InputLayout* layout;
 	dev->CreateInputLayout(ied, sizeof(ied) / sizeof(*ied), VS->GetBufferPointer(), VS->GetBufferSize(), &layout);
 	devcon->IASetInputLayout(layout);
+
 }
 
 Shader::~Shader() {

@@ -16,6 +16,7 @@
 Debug
 assets/models
 assets/textures
+assets/materials
 *.ilk
 *.pdb
 *.exe

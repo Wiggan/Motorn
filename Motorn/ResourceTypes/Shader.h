@@ -1,6 +1,6 @@
 #pragma once
 #include <d3d11.h>
-#include "Structs.h"
+#include "../Structs.h"
 #include <iostream>
 
 class Shader {

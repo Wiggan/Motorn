@@ -1,17 +1,7 @@
 #pragma once
 #include <d3d11.h>
 #include <DirectXMath.h>
-
-struct ShaderConstants {
-	DirectX::XMFLOAT4X4 worldMatrix;
-	DirectX::XMFLOAT4X4 viewMatrix;
-	DirectX::XMFLOAT4X4 projectionMatrix;
-	FLOAT color[4];
-	FLOAT time;
-	FLOAT black[3];
-};
-
-
+#include "Structs.h"
 
 struct VERTEX
 {

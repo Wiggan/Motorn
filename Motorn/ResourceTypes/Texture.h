@@ -1,5 +1,5 @@
 #pragma once
-#include "Structs.h"
+#include "../Structs.h"
 #include <string>
 
 class Texture {

@@ -52,6 +52,9 @@ void Camera::setFarthest(float distance)
 	projectionChanged = true;
 	farthest = distance;
 }
+DirectX::XMFLOAT3 Camera::getPosition() {
+	return position;
+}
 void Camera::move( const DIRECTIONS direction, const float distance )
 {
 	viewChanged = true;

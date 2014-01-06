@@ -15,7 +15,7 @@
 #include "Vertex.h"
 #include "Mesh.h"
 #include "Entity.h"
-
+#include "Structs.h"
 class AbstractGame
 {
 private:
@@ -31,8 +31,6 @@ private:
 	ID3D11DepthStencilState* depthStencilState;
 	ID3D11DepthStencilView* depthStencilView;
 	HWND hwnd;
-
-
 	int mouseX;
 	int mouseY;
 protected:
@@ -46,6 +44,7 @@ public:
 	bool pipelineInit();
 	void startGame();
 	void renderFrame(const double delta);
+	void setFrameConstants(const PerFrameBuffer &constants);
 	DirectX::XMINT2 getWindowSize();
 	void setRendererSize(const DirectX::XMINT2 &size);
 	AbstractGame();

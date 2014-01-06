@@ -1,5 +1,5 @@
 #include "Entity.h"
-
+#include "Camera.h"
 
 Entity::Entity(const std::string &pName, Drawable** pDrawable) : mName(pName), mDrawable(pDrawable) {
 	using namespace DirectX;
@@ -11,6 +11,7 @@ Entity::Entity(const std::string &pName, Drawable** pDrawable) : mName(pName), m
 	mRotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	XMStoreFloat4x4(&mParentTransform, XMMatrixIdentity());
 	mParent = NULL;
+	mAlwaysFacingCamera = false;
 }
 Entity::~Entity() {
 	mChildren.clear();
@@ -57,26 +58,37 @@ void Entity::setParentTransform(const DirectX::XMFLOAT4X4 &pParentTransform) {
 	//mParentUpdate = true;
 	mParentTransform = pParentTransform;
 }
+void Entity::setAlwaysFacingCamera(bool pFacingCamera) {
+	mAlwaysFacingCamera = pFacingCamera;
+}
 DirectX::XMFLOAT4X4& Entity::getTransform() {
 	using namespace DirectX;
-	if ( mUpdate ) {
-		XMStoreFloat4x4(&mTransform, 
+	if ( mAlwaysFacingCamera ) {
+		XMFLOAT3 up(0.0f, 1.0f, 0.0f);
+		XMStoreFloat4x4(&mTransform,
 			XMMatrixTranspose(
 			XMMatrixScalingFromVector(XMLoadFloat3(&mScale))*
-			XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&mRotation))*
+			XMMatrixLookAtLH(XMLoadFloat3(&mPosition), 
+			XMLoadFloat3(&Camera::getInstance().getPosition()), 
+			XMLoadFloat3(&up))*
 			XMMatrixTranslationFromVector(XMLoadFloat3(&mPosition))));
+	} else {
+		if ( mUpdate ) {
+			XMStoreFloat4x4(&mTransform, 
+				XMMatrixTranspose(
+				XMMatrixScalingFromVector(XMLoadFloat3(&mScale))*
+				XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&mRotation))*
+				XMMatrixTranslationFromVector(XMLoadFloat3(&mPosition))));
+		}
 		mUpdate = false;
 	}
-	//if ( mParentUpdate ) {
-		for ( auto it = mChildren.begin(); it != mChildren.end(); it++ ) {
-			XMFLOAT4X4 totalParentTransform = mTransform;
-			if ( mParent != NULL ) {
-				XMStoreFloat4x4(&totalParentTransform, XMLoadFloat4x4(&mParentTransform)*XMLoadFloat4x4(&mTransform));
-			}
-			(*it)->setParentTransform(totalParentTransform);
+	for ( auto it = mChildren.begin(); it != mChildren.end(); it++ ) {
+		XMFLOAT4X4 totalParentTransform = mTransform;
+		if ( mParent != NULL ) {
+			XMStoreFloat4x4(&totalParentTransform, XMLoadFloat4x4(&mParentTransform)*XMLoadFloat4x4(&mTransform));
 		}
-	//	mParentUpdate = false;
-	//}
+		(*it)->setParentTransform(totalParentTransform);
+	}
 	return mTransform;
 }
 

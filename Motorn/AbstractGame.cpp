@@ -173,12 +173,44 @@ void AbstractGame::renderFrame(double delta)
 	devcon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);;
 	static double total = delta;
 	total += delta;
+	PerFrameBuffer constants;
+	constants.projectionMatrix = Camera::getInstance().getProjection();
+	constants.viewMatrix = Camera::getInstance().getView();
+	constants.directionalLight.direction = { -1.1f, -1.0f, 0.1f };
+	constants.directionalLight.diffuse = { 0.5f, 0.5f, 0.5f, 1.0f };
+	constants.directionalLight.ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
+	constants.directionalLight.specular = { 0.5f, 0.5f, 0.5f, 1.0f };
+	constants.cameraPosition = Camera::getInstance().getPosition();
+	//std::cout << Camera::getInstance().getPosition().x << ", " << Camera::getInstance().getPosition().y << ", " << Camera::getInstance().getPosition().z << ", " << std::endl;
+	constants.time = 1234;
+	setFrameConstants(constants);
 	mWorld.update(delta);
-	mWorld.setRotation(DirectX::XMFLOAT3(total/1000, 0.0f, 0.0f));
+	//mWorld.setRotation(DirectX::XMFLOAT3(total/1000, 0.0f, 0.0f));
 	mWorld.draw();
 	swapchain->Present(0, 0);
 }
-
+void AbstractGame::setFrameConstants(const PerFrameBuffer &constants) {
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+	bd.Usage = D3D11_USAGE_DYNAMIC;
+	bd.ByteWidth = sizeof(constants);
+	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	ID3D11Buffer * buffer;
+	HRESULT hr1 = dev->CreateBuffer(&bd, NULL, &buffer);
+	if ( FAILED(hr1) ) {
+		std::cout << "Failed to create buffer! " << hr1 << std::endl;
+	}
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	HRESULT hr2 = devcon->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if ( FAILED(hr2) ) {
+		std::cout << "Failed mapping buffer to mapped resource!" << std::endl;
+	}
+	memcpy(mappedResource.pData, &constants, sizeof(constants));
+	devcon->Unmap(buffer, 0);
+	devcon->PSSetConstantBuffers(1, 1, &buffer);
+	devcon->VSSetConstantBuffers(1, 1, &buffer);
+}
 int checkForChangedResources(void *ptr) {
 	while ( true ) {
 		Sleep(1000.0f);

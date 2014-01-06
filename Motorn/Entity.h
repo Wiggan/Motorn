@@ -16,6 +16,7 @@ private:
 	Entity* mParent;
 	bool mUpdate;
 	bool mParentUpdate;
+	bool mAlwaysFacingCamera;
 	std::string mName;
 public:
 	Entity(const std::string &pName, Drawable** pDrawable);
@@ -30,5 +31,6 @@ public:
 	void setScale(const DirectX::XMFLOAT3 &pScale);
 	void setParentTransform(const DirectX::XMFLOAT4X4 &pParentTransform);
 	DirectX::XMFLOAT4X4& getTransform();
+	void setAlwaysFacingCamera(bool facingCamera);
 };
 

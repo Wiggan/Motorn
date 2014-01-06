@@ -8,9 +8,9 @@
 #include <algorithm>
 #include <iterator>
 #include <stdlib.h> 
-#include "Camera.h"
+#include "../Camera.h"
 
-Mesh::Mesh(D3dStuff &stuff, const std::string &filename, std::vector<Texture*> pTextures)
+Mesh::Mesh(D3dStuff &stuff, const std::string &filename, std::vector<Texture*> pTextures, MaterialResource** pMaterialResource)
 {
 	using namespace DirectX;
 	using namespace std;
@@ -20,6 +20,7 @@ Mesh::Mesh(D3dStuff &stuff, const std::string &filename, std::vector<Texture*> p
 	for ( auto it = pTextures.begin(); it != pTextures.end(); it++ ) {
 		mTextureViews.push_back((*it)->getTextureView());
 	}
+	mMaterialResource = pMaterialResource;
 	ifstream ifs;
 	ifs.open(filename);
 	vector<VERTEX> vertices(0);
@@ -89,7 +90,7 @@ Mesh::Mesh(D3dStuff &stuff, const std::string &filename, std::vector<Texture*> p
 						vertices.push_back(vertex);
 						vertexIndices.push_back(vertexIndices.size());
 					}
-					cout << "Adding a face: " << tokens[0] << " " << tokens[1] << " " << tokens[2] << " " << tokens[3] << endl;
+					//cout << "Adding a face: " << tokens[0] << " " << tokens[1] << " " << tokens[2] << " " << tokens[3] << endl;
 				}
 			}
 		}
@@ -151,6 +152,9 @@ Mesh::Mesh(D3dStuff &stuff, const std::string &filename, std::vector<Texture*> p
 std::vector<Texture*> Mesh::getTextures() {
 	return mTextures;
 }
+MaterialResource** Mesh::getMaterial() {
+	return mMaterialResource;
+}
 
 Mesh::~Mesh()
 {
@@ -160,13 +164,7 @@ void Mesh::draw(const DirectX::XMFLOAT4X4 &transform)
 {
 	using namespace DirectX;
 	constants.worldMatrix = transform;
-	constants.projectionMatrix = Camera::getInstance().getProjection();
-	constants.viewMatrix = Camera::getInstance().getView();
-	constants.time += 16.6f;
-	constants.color[0] = 1.0f;
-	constants.color[1] = 1.0f;
-	constants.color[2] = 1.0f;
-	constants.color[3] = 1.0f;
+	constants.material = (*mMaterialResource)->getMaterial();
 	setShaderConstants(constants);
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;

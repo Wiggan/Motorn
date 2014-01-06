@@ -42,6 +42,7 @@ public:
 	static Camera& getInstance();
 	DirectX::XMFLOAT4X4 getView();
 	DirectX::XMFLOAT4X4 getProjection();
+	DirectX::XMFLOAT3 getPosition();
 
 	void setProjectionSize(const DirectX::XMINT2 &size);
 	void setProjectionAngle(float angle);
