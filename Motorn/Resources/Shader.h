@@ -10,7 +10,7 @@ private:
 	ID3D11Device *dev;
 	ID3D11DeviceContext *devcon;
 	char* shader;
-	int size;
+	unsigned int size;
 public:
 	void load();
 	Shader(D3dStuff &stuff, const std::string &filename);

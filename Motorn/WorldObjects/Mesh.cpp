@@ -42,23 +42,23 @@ Mesh::Mesh(D3dStuff &stuff, const std::string &filename, std::vector<Texture*> p
 					back_inserter<vector<string> >(tokens));
 				if ( strcmp("v", tokens[0].c_str()) == 0 ) {
 					XMFLOAT3 v;
-					v.x = atof(tokens[1].c_str());
-					v.y = atof(tokens[2].c_str());
-					v.z = atof(tokens[3].c_str());
+					v.x = (float)atof(tokens[1].c_str());
+					v.y = (float)atof(tokens[2].c_str());
+					v.z = (float)atof(tokens[3].c_str());
 					//v.Color = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 					//cout << "Adding a vertex: " << tokens[0] << " " << v.X << " " << v.Y << " " << v.Z << endl;
 					positions.push_back(v);
 				} else if ( strcmp("vt", tokens[0].c_str()) == 0 ) {
 					XMFLOAT2 vt;
-					vt.x = atof(tokens[1].c_str());
-					vt.y = atof(tokens[2].c_str());
+					vt.x = (float)atof(tokens[1].c_str());
+					vt.y = (float)atof(tokens[2].c_str());
 					//cout << "Adding a vertex: " << tokens[0] << " " << v.X << " " << v.Y << " " << v.Z << endl;
 					uvs.push_back(vt);
 				} else if ( strcmp("vn", tokens[0].c_str()) == 0 ) {
 						XMFLOAT3 vn;
-						vn.x = atof(tokens[1].c_str());
-						vn.y = atof(tokens[2].c_str());
-						vn.z = atof(tokens[3].c_str());
+						vn.x = (float)atof(tokens[1].c_str());
+						vn.y = (float)atof(tokens[2].c_str());
+						vn.z = (float)atof(tokens[3].c_str());
 						//cout << "Adding a vertex: " << tokens[0] << " " << v.X << " " << v.Y << " " << v.Z << endl;
 						normals.push_back(vn);
 				} else if ( strcmp( "f", tokens[0].c_str() ) == 0 ) {
@@ -160,10 +160,14 @@ Mesh::~Mesh()
 {
 }
 
-void Mesh::draw(const DirectX::XMFLOAT4X4 &transform)
+void Mesh::draw()
 {
 	using namespace DirectX;
-	constants.worldMatrix = transform;
+	constants.worldMatrix = mTransform;
+	XMMATRIX A = XMLoadFloat4x4(&mTransform);
+	A.r[3] = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	XMVECTOR det = XMMatrixDeterminant(A);
+	XMStoreFloat4x4(&constants.worldMatrixInverseTranspose, XMMatrixInverse(&det, A));
 	constants.material = (*mMaterialResource)->getMaterial();
 	setShaderConstants(constants);
 	UINT stride = sizeof(VERTEX);

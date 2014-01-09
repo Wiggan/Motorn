@@ -35,10 +35,10 @@ struct FileInfo {
 	FileInfo(const std::string &pCompletePath, const std::string &pName, ResourceType pType) :
 	completePath(pCompletePath), name(pName), type(pType) {}
 	bool operator<(const FileInfo &other) {
-		return name < other.name;
+		return completePath < other.completePath;
 	}
 	friend bool operator<(const FileInfo &left, const FileInfo &right) {
-		return left.name < right.name;
+		return left.completePath < right.completePath;
 	}
 	std::string completePath;
 	std::string name;

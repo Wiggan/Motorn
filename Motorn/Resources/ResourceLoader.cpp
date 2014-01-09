@@ -15,8 +15,8 @@ Texture* ResourceLoader::getTexture(const std::string &pTextureName) {
 	if ( it == mTextures.end() ) {
 		texture = new Texture(mStuff, fileName);
 		mTextures.insert(pair<string, Texture*>(pTextureName, texture));
-		FileInfo info(fileName, pTextureName, TEXTURE);
-		mFilesToCheck.insert(pair<FileInfo, TimeStamp>(info, getFileTimeStamp(fileName)));
+		//FileInfo info(fileName, pTextureName, TEXTURE);
+		//mFilesToCheck.insert(pair<FileInfo, TimeStamp>(info, getFileTimeStamp(fileName)));
 	} else {
 		texture = it->second;
 	}
@@ -28,7 +28,6 @@ Drawable** ResourceLoader::getMesh(const std::string &pMeshName, std::vector<Tex
 	string fileName = "..\\assets\\models\\" + pMeshName + ".obj";
 	DrawableMap::iterator it = mMeshes.find(pMeshName);
 	Drawable** mesh;
-	
 	if ( it == mMeshes.end() ) {
 		mesh = new Drawable*;
 		*mesh = new Mesh(mStuff, fileName, pTextures, pMaterialResource);
@@ -44,7 +43,6 @@ MaterialResource** ResourceLoader::getMaterial(const std::string &pMaterialName)
 	string fileName = "..\\assets\\materials\\" + pMaterialName + ".mtl";
 	MaterialMap::iterator it = mMaterials.find(pMaterialName);
 	MaterialResource** material;
-
 	if ( it == mMaterials.end() ) {
 		material = new MaterialResource*;
 		*material = new MaterialResource(fileName);
@@ -78,7 +76,6 @@ Drawable** ResourceLoader::getSprite(Texture* pTexture) {
 
 void ResourceLoader::init(const D3dStuff &s) {
 	mStuff = D3dStuff(s);
-
 }
 
 

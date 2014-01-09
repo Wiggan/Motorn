@@ -1,8 +1,9 @@
 #pragma once
 #include "../Vertex.h"
 #include <iostream>
+#include "Component.h"
 
-class Drawable {
+class Drawable : public Component {
 protected:
 	ID3D11Device *dev;
 	ID3D11DeviceContext *devcon;
@@ -31,9 +32,9 @@ protected:
 		devcon->Unmap(buffer, 0);
 		devcon->PSSetConstantBuffers(0, 1, &buffer);
 		devcon->VSSetConstantBuffers(0, 1, &buffer);
+		buffer->Release();
 		return true;
 	}
 public:
 	virtual ~Drawable() {}
-	virtual void draw(const DirectX::XMFLOAT4X4 &transform) = 0;
 };

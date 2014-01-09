@@ -14,7 +14,7 @@ Shader::Shader(D3dStuff &pStuff, const std::string &pFileName) {
 	// Load shader file
 	ifstream ifs(pFileName, std::ios::binary);
 	ifs.seekg(0, std::ios_base::end);
-	size = 1 + ifs.tellg();
+	size = (unsigned int)(1 + ifs.tellg());
 	ifs.seekg(0, std::ios_base::beg);
 	shader = new char[size];
 	for ( int i = 0; i < size; i++ ) {
@@ -39,6 +39,8 @@ void Shader::load() {
 		memcpy(err, error->GetBufferPointer(), error->GetBufferSize());
 		cout << err << endl;
 		free(err);
+		cout << "Shader loading failed, falling back to standard" << endl;
+		return;
 	}
 	error = NULL;
 	D3DCompile(shader, size, NULL, NULL, NULL, "PShader", "ps_5_0", 0, 0, &PS, &error);
@@ -47,6 +49,8 @@ void Shader::load() {
 		memcpy(err, error->GetBufferPointer(), error->GetBufferSize());
 		cout << err << endl;
 		free(err);
+		cout << "Shader loading failed, falling back to standard" << endl;
+		return;
 	}
 	dev->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &mVertexShader);
 	devcon->VSSetShader(mVertexShader, 0, 0);

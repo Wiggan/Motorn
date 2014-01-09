@@ -1,9 +1,9 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include "../Vertex.h"
+#include "Vertex.h"
 #include "Drawable.h"
-#include "../Structs.h"
+#include "Structs.h"
 #include "Texture.h"
 #include <vector>
 
@@ -14,6 +14,7 @@ private:
 public:
 	Sprite(D3dStuff &stuff, Texture* pTexture);
 	~Sprite();
-	virtual void draw(const DirectX::XMFLOAT4X4 &transform);
+	virtual void draw();
+	virtual const DirectX::XMFLOAT4X4& getTransform();
 };
 

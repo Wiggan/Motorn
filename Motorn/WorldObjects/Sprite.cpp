@@ -41,10 +41,10 @@ Sprite::~Sprite()
 }
 
 
-void Sprite::draw(const DirectX::XMFLOAT4X4 &transform)
+void Sprite::draw()
 {
 	using namespace DirectX;
-	constants.worldMatrix = transform;
+	constants.worldMatrix = mTransform;
 	setShaderConstants(constants);
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
@@ -54,3 +54,17 @@ void Sprite::draw(const DirectX::XMFLOAT4X4 &transform)
 	devcon->Draw(4, 0); 
 }
 
+const DirectX::XMFLOAT4X4& Sprite::getTransform() {
+	using namespace DirectX;
+	XMFLOAT3 up(0.0f, 1.0f, 0.0f);
+	XMStoreFloat4x4(&mTransform,
+		XMMatrixTranspose(
+		XMMatrixScalingFromVector(XMLoadFloat3(&mScale))*
+		XMMatrixLookAtLH(XMLoadFloat3(&mPosition),
+		XMLoadFloat3(&Camera::getInstance().getPosition()),
+		XMLoadFloat3(&up))*
+		XMMatrixTranslationFromVector(XMLoadFloat3(&mPosition))));
+	
+	
+	return mTransform;
+}

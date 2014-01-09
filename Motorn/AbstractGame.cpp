@@ -1,12 +1,13 @@
 #include "AbstractGame.h"
 #include "Camera.h"
 #include "ResourceLoader.h"
-
+#include "PointLightResource.h"
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
 AbstractGame::AbstractGame()
 {
+	DirectX::XMStoreFloat4x4(&mWorldTransform, DirectX::XMMatrixIdentity());
 }
 
 
@@ -177,14 +178,30 @@ void AbstractGame::renderFrame(double delta)
 	constants.projectionMatrix = Camera::getInstance().getProjection();
 	constants.viewMatrix = Camera::getInstance().getView();
 	constants.directionalLight.direction = { -1.1f, -1.0f, 0.1f };
-	constants.directionalLight.diffuse = { 0.5f, 0.5f, 0.5f, 1.0f };
-	constants.directionalLight.ambient = { 0.2f, 0.2f, 0.2f, 1.0f };
-	constants.directionalLight.specular = { 0.5f, 0.5f, 0.5f, 1.0f };
+	constants.directionalLight.diffuse = { 0.1f, 0.1f, 0.1f, 1.0f };
+	constants.directionalLight.ambient = { 0.1f, 0.1f, 0.1f, 1.0f };
+	constants.directionalLight.specular = { 0.1f, 0.1f, 0.1f, 1.0f };
+	constants.pointLightCount = 3;
+	PointLightResource p1;
+	PointLightResource p2;
+	PointLightResource p3;
+	p1.setPosition(DirectX::XMFLOAT3(sin(total / 100)*20, 10.0f, 0.0f));
+	p2.setPosition(DirectX::XMFLOAT3(0.0f, sin(total / 200)*20, 10.0f));
+	p3.setPosition(DirectX::XMFLOAT3(1.0f, 0.0f, sin(total / 300)*20));
+	p1.setDiffuse(DirectX::XMFLOAT4(1.0f, 0.1f, 0.1f, 1.0f));
+	p2.setDiffuse(DirectX::XMFLOAT4(0.1f, 1.0f, 0.1f, 1.0f));
+	p3.setDiffuse(DirectX::XMFLOAT4(0.1f, 0.1f, 1.0f, 1.0f));
+	p1.setSpecular(DirectX::XMFLOAT4(1.0f, 0.1f, 0.1f, 1.0f));
+	p2.setSpecular(DirectX::XMFLOAT4(0.1f, 1.0f, 0.1f, 1.0f));
+	p3.setSpecular(DirectX::XMFLOAT4(0.1f, 0.1f, 1.0f, 1.0f));
+	constants.pointLights[0] = p1.getPointLight();
+	constants.pointLights[1] = p2.getPointLight();
+	constants.pointLights[2] = p3.getPointLight();
 	constants.cameraPosition = Camera::getInstance().getPosition();
 	//std::cout << Camera::getInstance().getPosition().x << ", " << Camera::getInstance().getPosition().y << ", " << Camera::getInstance().getPosition().z << ", " << std::endl;
 	constants.time = 1234;
 	setFrameConstants(constants);
-	mWorld.update(delta);
+	mWorld.update(delta, mWorldTransform, false);
 	//mWorld.setRotation(DirectX::XMFLOAT3(total/1000, 0.0f, 0.0f));
 	mWorld.draw();
 	swapchain->Present(0, 0);
@@ -202,18 +219,19 @@ void AbstractGame::setFrameConstants(const PerFrameBuffer &constants) {
 		std::cout << "Failed to create buffer! " << hr1 << std::endl;
 	}
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	HRESULT hr2 = devcon->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-	if ( FAILED(hr2) ) {
+	hr1 = devcon->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if ( FAILED(hr1) ) {
 		std::cout << "Failed mapping buffer to mapped resource!" << std::endl;
 	}
 	memcpy(mappedResource.pData, &constants, sizeof(constants));
 	devcon->Unmap(buffer, 0);
 	devcon->PSSetConstantBuffers(1, 1, &buffer);
 	devcon->VSSetConstantBuffers(1, 1, &buffer);
+	buffer->Release();
 }
 int checkForChangedResources(void *ptr) {
 	while ( true ) {
-		Sleep(1000.0f);
+		Sleep(1000);
 		ResourceLoader::checkForChangedResources();
 	}
 	return 0;
@@ -339,7 +357,7 @@ void AbstractGame::startGame() {
 			}
 			renderFrame(16.6667f);
 			double now = clock();
-			double rest = 16.6667f - (now - lastTime);
+			int rest = (int)(16.6667f - (now - lastTime));
 			//double rest = 1000.0f - (now - lastTime);
 			//cout << "Elapsed time: " << now - lastTime << "   Rest: " << rest << endl;
 			if ( rest > 0 ) {

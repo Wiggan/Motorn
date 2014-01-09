@@ -47,7 +47,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Libs\SDL2-2.0.1\include;$(SolutionDir)\Libs\DirectXTK\Inc;$(ProjectDir)\ResourceTypes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Libs\SDL2-2.0.1\include;$(SolutionDir)\Libs\DirectXTK\Inc;$(ProjectDir)\Resources;$(ProjectDir);$(ProjectDir)\WorldObjects;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <AdditionalOptions> -D_ITERATOR_DEBUG_LEVEL=0 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -86,30 +86,36 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="ResourceTypes\Drawable.h" />
-    <ClInclude Include="ResourceTypes\MaterialResource.h" />
-    <ClInclude Include="ResourceTypes\Mesh.h" />
-    <ClInclude Include="ResourceLoader.h" />
+    <ClInclude Include="WorldObjects\Entity.h" />
+    <ClInclude Include="WorldObjects\Component.h" />
+    <ClInclude Include="WorldObjects\PointLightResource.h" />
+    <ClInclude Include="WorldObjects\Drawable.h" />
+    <ClInclude Include="Resources\MaterialResource.h" />
+    <ClInclude Include="WorldObjects\Mesh.h" />
+    <ClInclude Include="Resources\ResourceLoader.h" />
     <ClInclude Include="AbstractGame.h" />
-    <ClInclude Include="ResourceTypes\Shader.h" />
-    <ClInclude Include="ResourceTypes\Sprite.h" />
+    <ClInclude Include="Resources\Shader.h" />
+    <ClInclude Include="WorldObjects\Sprite.h" />
+    <ClInclude Include="WorldObjects\WorldObject.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="TestGame.h" />
-    <ClInclude Include="ResourceTypes\Texture.h" />
+    <ClInclude Include="Resources\Texture.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="ResourceTypes\MaterialResource.cpp" />
-    <ClCompile Include="ResourceTypes\Mesh.cpp" />
-    <ClCompile Include="ResourceLoader.cpp" />
+    <ClCompile Include="WorldObjects\Entity.cpp" />
+    <ClCompile Include="WorldObjects\Component.cpp" />
+    <ClCompile Include="WorldObjects\PointLightResource.cpp" />
+    <ClCompile Include="Resources\MaterialResource.cpp" />
+    <ClCompile Include="WorldObjects\Mesh.cpp" />
+    <ClCompile Include="Resources\ResourceLoader.cpp" />
     <ClCompile Include="AbstractGame.cpp" />
-    <ClCompile Include="ResourceTypes\Shader.cpp" />
-    <ClCompile Include="ResourceTypes\Sprite.cpp" />
+    <ClCompile Include="Resources\Shader.cpp" />
+    <ClCompile Include="WorldObjects\Sprite.cpp" />
     <ClCompile Include="TestGame.cpp" />
-    <ClCompile Include="ResourceTypes\Texture.cpp" />
+    <ClCompile Include="Resources\Texture.cpp" />
+    <ClCompile Include="WorldObjects\WorldObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Libs\DirectXTK\DirectXTK_Desktop_2013.vcxproj">

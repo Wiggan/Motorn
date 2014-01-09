@@ -33,6 +33,7 @@ private:
 	HWND hwnd;
 	int mouseX;
 	int mouseY;
+	DirectX::XMFLOAT4X4 mWorldTransform;
 protected:
 	virtual void setupWorld() = 0;
 	Entity mWorld;
