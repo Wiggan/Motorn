@@ -13,19 +13,15 @@ void TestGame::setupWorld() {
 	mWorld = Entity("World");
 	std::vector<Texture*> textures;
 	textures.push_back(ResourceLoader::getTexture("bark"));
-	Entity* child1 = new Entity("Child1", ResourceLoader::getMesh("box3", textures, ResourceLoader::getMaterial("box3")));
-	Entity* child2 = new Entity("Child2", ResourceLoader::getMesh("box3", textures, ResourceLoader::getMaterial("box3")));
-	Entity* child3 = new Entity("Child3", ResourceLoader::getMesh("box3", textures, ResourceLoader::getMaterial("box3")));
-	child2->setScale(XMFLOAT3(0.3f, 0.3f, 0.3f));
-	child2->setPosition(XMFLOAT3(0.0f, 3.0f, 0.0f));
-	child3->setScale(XMFLOAT3(0.3f, 0.3f, 0.3f));
-	child3->setPosition(XMFLOAT3(0.0f, 3.0f, 0.0f));
-	child1->addEntity(*child2);
-	child2->addEntity(*child3);
-	mWorld.addEntity(*child1);
-	Entity* shroom = new Entity("Shroom", ResourceLoader::getMesh("shroom", textures, ResourceLoader::getMaterial("box3")));
-	shroom->setPosition(XMFLOAT3(7.0f, 2.0f, 0.0f));
-	mWorld.addEntity(*shroom);
+	Entity* child1 = new Entity("Child1");
+	MeshResource* boxMesh = ResourceLoader::getMeshResource("box3");
+
+	child1->addComponent(new Mesh(mStuff, boxMesh, textures, ResourceLoader::getMaterialResource("box3")));
+	//Entity child2("Child2"ResourceLoader::getMesh("box3", textures, ResourceLoader::getMaterial("box3")));
+	//Entity child3 = Entity("Child3", ResourceLoader::getMesh("box3", textures, ResourceLoader::getMaterial("box3")));
+	//Entity* shroom = new Entity("Shroom", ResourceLoader::getMesh("shroom", textures, ResourceLoader::getMaterial("box3")));
+	//shroom->setPosition(XMFLOAT3(7.0f, 2.0f, 0.0f));
+	mWorld.addEntity(child1);
 
 	//Entity* sprite = new Entity("Sprite", ResourceLoader::getSprite(ResourceLoader::getTexture("bark")));
 	//sprite->setPosition(XMFLOAT3(0.0f, 0.0f, 0.0f));

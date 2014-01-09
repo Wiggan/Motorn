@@ -14,6 +14,6 @@ public:
 	virtual void		setRotation(const DirectX::XMFLOAT3 &pRotation);
 	virtual void		setScale(const DirectX::XMFLOAT3 &pScale);
 	virtual void		update(const float delta, const DirectX::XMFLOAT4X4 &pTransform, const bool parentUpdated);
-	virtual void		draw() const {}
+	virtual void		draw() = 0;//{}
 	virtual				~WorldObject() {}
 };

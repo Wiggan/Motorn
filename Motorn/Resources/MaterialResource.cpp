@@ -4,15 +4,27 @@
 #include <string>
 #include <sstream>
 #include <vector>
-MaterialResource::MaterialResource(const std::string pFileName) {
+MaterialResource::MaterialResource(const std::string pFileName) : mFileName(pFileName) {
 	mMaterial.ambient = { 0.5f, 0.5f, 0.5f, 1.0f };
 	mMaterial.diffuse = { 0.5f, 0.5f, 0.5f, 1.0f };
 	mMaterial.specular = { 0.2f, 0.2f, 0.2f, 16.0f };
-
+}
+bool MaterialResource::reload() {
+	if ( load() ) {
+		for ( auto it = mListeners.begin(); it != mListeners.end(); it++ ) {
+			(*it)->onMaterialLoaded(this);
+		}
+		return true;
+	} else {
+		std::cout << "Failed reloading mesh resource!" << std::endl;
+		return false;
+	}
+}
+bool MaterialResource::load() {
 	using namespace DirectX;
 	using namespace std;
 	ifstream ifs;
-	ifs.open(pFileName);
+	ifs.open(mFileName);
 	if ( ifs ) {
 		string line;
 		while ( getline(ifs, line) ) {
@@ -40,16 +52,19 @@ MaterialResource::MaterialResource(const std::string pFileName) {
 					mMaterial.specular.w = atof(tokens[1].c_str());
 				} else if ( strcmp("d", tokens[0].c_str()) == 0 ) {
 					mMaterial.diffuse.w = atof(tokens[1].c_str());
-				} 
+				}
 			}
 		}
+	} else {
+		return false;
 	}
+	return true;
 }
-
-
 MaterialResource::~MaterialResource() {
 }
-
-const Material& MaterialResource::getMaterial() {
-	return mMaterial;
+Material* MaterialResource::getMaterial() {
+	return &mMaterial;
+}
+void MaterialResource::addListener(MaterialResourceListener* pListener) {
+	mListeners.push_back(pListener);
 }

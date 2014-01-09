@@ -202,7 +202,7 @@ void AbstractGame::renderFrame(double delta)
 	constants.time = 1234;
 	setFrameConstants(constants);
 	mWorld.update(delta, mWorldTransform, false);
-	//mWorld.setRotation(DirectX::XMFLOAT3(total/1000, 0.0f, 0.0f));
+	mWorld.setRotation(DirectX::XMFLOAT3(total/1000, 0.0f, 0.0f));
 	mWorld.draw();
 	swapchain->Present(0, 0);
 }
@@ -239,10 +239,9 @@ int checkForChangedResources(void *ptr) {
 
 bool AbstractGame::pipelineInit()
 {
-	D3dStuff stuff;
-	stuff.dev = dev;
-	stuff.devcon = devcon;
-	ResourceLoader::init(stuff);
+	mStuff.dev = dev;
+	mStuff.devcon = devcon;
+	ResourceLoader::init(mStuff);
 	ResourceLoader::getShader("shaders")->load();
 
 	SDL_Thread *thread;

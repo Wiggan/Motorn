@@ -10,17 +10,17 @@ Entity::Entity(const std::string &pName) : mName(pName) {
 Entity::~Entity() {
 	mChildren.clear();
 }
-void Entity::addEntity(Entity pChild) {
+void Entity::addEntity(Entity* pChild) {
 	mChildren.push_back(pChild);
-	pChild.setParent(this);
+	pChild->setParent(this);
 }
-void Entity::addComponent(Component pChild) {
+void Entity::addComponent(Component* pChild) {
 	mChildren.push_back(pChild);
-	pChild.setOwner(this);
+	pChild->setOwner(this);
 }
-void Entity::draw() const {
+void Entity::draw() {
 	for ( auto it = mChildren.begin(); it != mChildren.end(); it++ ) {
-		it->draw();
+		(*it)->draw();
 	}
 }
 void Entity::update(const float pDelta, const DirectX::XMFLOAT4X4 &pTransform, const bool pParentUpdated) {
@@ -37,7 +37,7 @@ void Entity::update(const float pDelta, const DirectX::XMFLOAT4X4 &pTransform, c
 		updated = true;
 	} 
 	for ( auto it = mChildren.begin(); it != mChildren.end(); it++ ) {
-		it->update(pDelta, mTransform, updated);
+		(*it)->update(pDelta, mTransform, updated);
 	}
 }
 void Entity::setPosition(const DirectX::XMFLOAT3 &pPosition) {

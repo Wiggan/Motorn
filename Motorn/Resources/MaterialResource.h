@@ -1,11 +1,22 @@
 #pragma once
-#include "../Structs.h"
+#include "Structs.h"
 #include <iostream>
-class MaterialResource {
-	Material mMaterial;
+#include <vector>
+class MaterialResource;
+class MaterialResourceListener {
 public:
-	const Material &getMaterial();
-	MaterialResource(const std::string pFileName);
-	~MaterialResource();
+	virtual void onMaterialLoaded(MaterialResource* pUpdatedMaterialResource) = 0;
+};
+class MaterialResource {
+	Material								mMaterial;
+	std::vector<MaterialResourceListener*>	mListeners;
+	std::string								mFileName;
+public:
+						MaterialResource(const std::string pFileName);
+						~MaterialResource();
+	Material*			getMaterial();
+	bool				load();
+	bool				reload();
+	void				addListener(MaterialResourceListener* pListener);
 };
 

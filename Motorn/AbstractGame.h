@@ -37,6 +37,7 @@ private:
 protected:
 	virtual void setupWorld() = 0;
 	Entity mWorld;
+	D3dStuff mStuff;
 public:
 	// function prototypes
 	void initD3D(HWND hWnd);     // sets up and initializes Direct3D

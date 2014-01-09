@@ -28,11 +28,11 @@ Sprite::Sprite(D3dStuff &stuff, Texture* pTexture)
 	bd.ByteWidth = sizeof(VERTEX) * 4;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	dev->CreateBuffer(&bd, NULL, &pVBuffer);
+	dev->CreateBuffer(&bd, NULL, &mVertexBuffer);
 	D3D11_MAPPED_SUBRESOURCE ms;
-	devcon->Map(pVBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
+	devcon->Map(mVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
 	memcpy(ms.pData, OurVertices, sizeof(OurVertices));
-	devcon->Unmap(pVBuffer, NULL);
+	devcon->Unmap(mVertexBuffer, NULL);
 }
 
 
@@ -48,7 +48,7 @@ void Sprite::draw()
 	setShaderConstants(constants);
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
-	devcon->IASetVertexBuffers(0, 1, &pVBuffer, &stride, &offset);
+	devcon->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 	devcon->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 	devcon->PSSetShaderResources(0, 1, &mTextureViews[0]);
 	devcon->Draw(4, 0); 

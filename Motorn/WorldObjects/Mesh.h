@@ -4,20 +4,21 @@
 #include "Structs.h"
 #include "Texture.h"
 #include "MaterialResource.h"
+#include "MeshResource.h"
 #include <vector>
-class Mesh : public Drawable
+class Mesh : public Drawable, public MeshResourceListener, public MaterialResourceListener
 {
-	ID3D11Buffer *iBuffer;
-	std::vector<ID3D11ShaderResourceView*> mTextureViews;
-	std::vector<Texture*> mTextures;
-	MaterialResource** mMaterialResource;
-	int n;
+	ID3D11Buffer							*mIndexBuffer;
+	int										mIndexCount;
+	std::vector<ID3D11ShaderResourceView*>	mTextureViews;
+	std::vector<Texture*>					mTextures;
+	Material*								mMaterial;
 public:
-	Mesh(D3dStuff &stuff, const std::string &filename, std::vector<Texture*> pTextures, MaterialResource** pMaterialResource);
+	Mesh(D3dStuff &stuff, MeshResource* pMeshResource, std::vector<Texture*> pTextures, MaterialResource* pMaterialResource);
 	~Mesh();
-	virtual void draw();
-	std::vector<Texture*> getTextures();
-	MaterialResource** getMaterial();
-	void setPosition();
+	virtual void			draw();
+	virtual void			onMeshLoaded(MeshResource* pUpdatedMeshResource);
+	virtual void			onMaterialLoaded(MaterialResource* pUpdatedMaterialResource);
+	void					setPosition();
 };
 

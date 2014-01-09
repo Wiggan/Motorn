@@ -7,7 +7,7 @@ class Drawable : public Component {
 protected:
 	ID3D11Device *dev;
 	ID3D11DeviceContext *devcon;
-	ID3D11Buffer *pVBuffer;
+	ID3D11Buffer *mVertexBuffer;
 	PerObjectBuffer constants;
 	bool setShaderConstants(const PerObjectBuffer &constants) {
 		D3D11_BUFFER_DESC bd;

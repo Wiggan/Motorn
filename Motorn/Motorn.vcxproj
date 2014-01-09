@@ -86,6 +86,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Resources\MeshResource.h" />
     <ClInclude Include="WorldObjects\Entity.h" />
     <ClInclude Include="WorldObjects\Component.h" />
     <ClInclude Include="WorldObjects\PointLightResource.h" />
@@ -104,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Resources\MeshResource.cpp" />
     <ClCompile Include="WorldObjects\Entity.cpp" />
     <ClCompile Include="WorldObjects\Component.cpp" />
     <ClCompile Include="WorldObjects\PointLightResource.cpp" />

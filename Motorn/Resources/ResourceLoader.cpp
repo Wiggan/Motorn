@@ -1,6 +1,6 @@
 #include "ResourceLoader.h"
 
-DrawableMap ResourceLoader::mMeshes;
+MeshResourceMap ResourceLoader::mMeshes;
 TextureMap ResourceLoader::mTextures;
 MaterialMap ResourceLoader::mMaterials;
 ShaderMap ResourceLoader::mShaders;
@@ -22,34 +22,33 @@ Texture* ResourceLoader::getTexture(const std::string &pTextureName) {
 	}
 	return texture;
 }
-
-Drawable** ResourceLoader::getMesh(const std::string &pMeshName, std::vector<Texture*> pTextures, MaterialResource** pMaterialResource) {
+MeshResource* ResourceLoader::getMeshResource(const std::string &pMeshName) {
 	using namespace std;
 	string fileName = "..\\assets\\models\\" + pMeshName + ".obj";
-	DrawableMap::iterator it = mMeshes.find(pMeshName);
-	Drawable** mesh;
+	MeshResourceMap::iterator it = mMeshes.find(pMeshName);
+	MeshResource* mesh;
 	if ( it == mMeshes.end() ) {
-		mesh = new Drawable*;
-		*mesh = new Mesh(mStuff, fileName, pTextures, pMaterialResource);
-		mMeshes.insert(pair<string, Drawable**>(pMeshName, mesh));
+		mMeshes.insert(pair<string, MeshResource>(pMeshName, MeshResource(mStuff, fileName)));
 		mFilesToCheck.insert(pair<FileInfo, TimeStamp>(FileInfo(fileName, pMeshName, MESH), getFileTimeStamp(fileName)));
+		mesh = &mMeshes.find(pMeshName)->second;
+		mesh->load();
 	} else {
-		mesh = it->second;
+		mesh = &it->second;
 	}
 	return mesh;
 }
-MaterialResource** ResourceLoader::getMaterial(const std::string &pMaterialName) {
+MaterialResource* ResourceLoader::getMaterialResource(const std::string &pMaterialName) {
 	using namespace std;
 	string fileName = "..\\assets\\materials\\" + pMaterialName + ".mtl";
 	MaterialMap::iterator it = mMaterials.find(pMaterialName);
-	MaterialResource** material;
+	MaterialResource* material;
 	if ( it == mMaterials.end() ) {
-		material = new MaterialResource*;
-		*material = new MaterialResource(fileName);
-		mMaterials.insert(pair<string, MaterialResource**>(pMaterialName, material));
+		mMaterials.insert(pair<string, MaterialResource>(pMaterialName, MaterialResource(fileName)));
 		mFilesToCheck.insert(pair<FileInfo, TimeStamp>(FileInfo(fileName, pMaterialName, MATERIAL), getFileTimeStamp(fileName)));
+		material = &mMaterials.find(pMaterialName)->second;
+		material->load();
 	} else {
-		material = it->second;
+		material = &it->second;
 	}
 	return material;
 }
@@ -94,21 +93,20 @@ void ResourceLoader::checkForChangedResources() {
 			}
 			case MATERIAL: {
 				std::cout << "Material changed! Reloading " << it->first.completePath << std::endl;
-				MaterialResource** material = mMaterials.find(it->first.name)->second;
-				mMaterials.erase(it->first.name);
-				*material = *getMaterial(it->first.name);
-				mMaterials.find(it->first.name)->second = material;
+				MaterialResource* material = &mMaterials.find(it->first.name)->second;
+				material->reload();
 				break;
 			}
 			case MESH: {
 				std::cout << "Mesh changed! Reloading " << it->first.completePath << std::endl;
-				Drawable** mesh = mMeshes.find(it->first.name)->second;
-				mMeshes.find(it->first.name)->second = NULL;
+				MeshResource* mesh = &mMeshes.find(it->first.name)->second;
+				mesh->reload();
+				/*mMeshes.find(it->first.name)->second = NULL;
 				std::vector<Texture*> textures = ((Mesh*)(*mesh))->getTextures();
 				MaterialResource** material = ((Mesh*)(*mesh))->getMaterial();
 				mMeshes.erase(it->first.name);
 				*mesh = *getMesh(it->first.name, textures, material);
-				mMeshes.find(it->first.name)->second = mesh;
+				mMeshes.find(it->first.name)->second = mesh;*/
 				break;
 			}
 			default:
