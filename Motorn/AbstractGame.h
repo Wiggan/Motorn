@@ -19,37 +19,39 @@
 class AbstractGame
 {
 private:
-	SDL_Window *win;
-	SDL_Renderer *ren;
-	SDL_Surface *bmp;
-	SDL_Texture *tex;
-	IDXGISwapChain *swapchain;             // the pointer to the swap chain interface
-	ID3D11Device *dev;                     // the pointer to our Direct3D device interface
-	ID3D11DeviceContext *devcon;           // the pointer to our Direct3D device context
-	ID3D11RenderTargetView *backbuffer;
-	ID3D11Texture2D* depthStencilBuffer;
-	ID3D11DepthStencilState* depthStencilState;
-	ID3D11DepthStencilView* depthStencilView;
-	HWND hwnd;
-	int mouseX;
-	int mouseY;
-	DirectX::XMFLOAT4X4 mWorldTransform;
+    SDL_Window *win;
+    SDL_Renderer *ren;
+    SDL_Surface *bmp;
+    SDL_Texture *tex;
+    IDXGISwapChain *swapchain;             // the pointer to the swap chain interface
+    ID3D11Device *dev;                     // the pointer to our Direct3D device interface
+    ID3D11DeviceContext *devcon;           // the pointer to our Direct3D device context
+    ID3D11RenderTargetView *backbuffer;
+    ID3D11Texture2D* depthStencilBuffer;
+    ID3D11DepthStencilState* depthStencilState;
+    ID3D11DepthStencilView* depthStencilView;
+    HWND hwnd;
+    int mouseX;
+    int mouseY;
 protected:
-	virtual void setupWorld() = 0;
-	Entity mWorld;
-	D3dStuff mStuff;
+    virtual void            setupWorld() = 0;
+    virtual void            update(const double delta) = 0;
+    DirectX::XMFLOAT4X4        mWorldTransform;
+    Entity                    mWorld;
+    std::vector<Entity*>    mRayCastableEntities;
+    D3dStuff                mStuff;
 public:
-	// function prototypes
-	void initD3D(HWND hWnd);     // sets up and initializes Direct3D
-	void cleanD3D(void);         // closes Direct3D and releases memory
-	bool initSDL();
-	bool pipelineInit();
-	void startGame();
-	void renderFrame(const double delta);
-	void setFrameConstants(const PerFrameBuffer &constants);
-	DirectX::XMINT2 getWindowSize();
-	void setRendererSize(const DirectX::XMINT2 &size);
-	AbstractGame();
-	virtual ~AbstractGame();
+    // function prototypes
+    void                initD3D(HWND hWnd);    
+    void                cleanD3D(void);        
+    bool                initSDL();
+    bool                pipelineInit();
+    void                startGame();
+    void                renderFrame(const double delta);
+    void                setFrameConstants(const PerFrameBuffer &constants);
+    DirectX::XMINT2        getWindowSize();
+    void                setRendererSize(const DirectX::XMINT2 &size);
+                        AbstractGame();
+    virtual                ~AbstractGame();
 };
 

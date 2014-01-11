@@ -85,8 +85,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="WorldObjects\AIEntity.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Resources\MeshResource.h" />
+    <ClInclude Include="WorldObjects\ScopeEntity.h" />
+    <ClInclude Include="Util.h" />
+    <ClInclude Include="WorldObjects\ScopeComponent.h" />
     <ClInclude Include="WorldObjects\Entity.h" />
     <ClInclude Include="WorldObjects\Component.h" />
     <ClInclude Include="WorldObjects\PointLightResource.h" />
@@ -104,8 +109,13 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="WorldObjects\AIEntity.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Resources\MeshResource.cpp" />
+    <ClCompile Include="WorldObjects\ScopeEntity.cpp" />
+    <ClCompile Include="Util.cpp" />
+    <ClCompile Include="WorldObjects\ScopeComponent.cpp" />
     <ClCompile Include="WorldObjects\Entity.cpp" />
     <ClCompile Include="WorldObjects\Component.cpp" />
     <ClCompile Include="WorldObjects\PointLightResource.cpp" />

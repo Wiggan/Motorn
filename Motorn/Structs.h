@@ -2,58 +2,58 @@
 #include <D3D11.h>
 #include <DirectXMath.h>
 struct D3dStuff {
-	ID3D11Device *dev;                     // the pointer to our Direct3D device interface
-	ID3D11DeviceContext *devcon;           // the pointer to our Direct3D device context
+    ID3D11Device *dev;                     // the pointer to our Direct3D device interface
+    ID3D11DeviceContext *devcon;           // the pointer to our Direct3D device context
 };
 struct Material {
-	Material() {
-		ZeroMemory(this, sizeof(this));
-	}
-	DirectX::XMFLOAT4 ambient;
-	DirectX::XMFLOAT4 diffuse;
-	DirectX::XMFLOAT4 specular; // w = power, or shininess
+    Material() {
+        ZeroMemory(this, sizeof(this));
+    }
+    DirectX::XMFLOAT4 ambient;
+    DirectX::XMFLOAT4 diffuse;
+    DirectX::XMFLOAT4 specular; // w = power, or shininess
 };
 struct DirectionalLight {
-	DirectionalLight() {
-		ZeroMemory(this, sizeof(this));
-	}
-	DirectX::XMFLOAT4 ambient;
-	DirectX::XMFLOAT4 diffuse;
-	DirectX::XMFLOAT4 specular;
-	DirectX::XMFLOAT3 direction;
-	float pad;
+    DirectionalLight() {
+        ZeroMemory(this, sizeof(this));
+    }
+    DirectX::XMFLOAT4 ambient;
+    DirectX::XMFLOAT4 diffuse;
+    DirectX::XMFLOAT4 specular;
+    DirectX::XMFLOAT3 direction;
+    float pad;
 };
 struct PointLight {
-	PointLight() {
-		ZeroMemory(this, sizeof(this));
-	}
-	DirectX::XMFLOAT4 ambient;
-	DirectX::XMFLOAT4 diffuse;
-	DirectX::XMFLOAT4 specular;
-	DirectX::XMFLOAT3 position;
-	float pad;
-	DirectX::XMFLOAT3 attenuation;
-	float range;
+    PointLight() {
+        ZeroMemory(this, sizeof(this));
+    }
+    DirectX::XMFLOAT4 ambient;
+    DirectX::XMFLOAT4 diffuse;
+    DirectX::XMFLOAT4 specular;
+    DirectX::XMFLOAT3 position;
+    float pad;
+    DirectX::XMFLOAT3 attenuation;
+    float range;
 };
 struct PerFrameBuffer {
-	PerFrameBuffer() {
-		ZeroMemory(this, sizeof(this));
-	}
-	DirectX::XMFLOAT4X4 viewMatrix;
-	DirectX::XMFLOAT4X4 projectionMatrix;
-	DirectionalLight directionalLight;
-	PointLight pointLights[3];
-	DirectX::XMFLOAT3 cameraPosition;
-	float pad1;
-	double time;
-	int pointLightCount;
-	float pad2;
+    PerFrameBuffer() {
+        ZeroMemory(this, sizeof(this));
+    }
+    DirectX::XMFLOAT4X4 viewMatrix;
+    DirectX::XMFLOAT4X4 projectionMatrix;
+    DirectionalLight directionalLight;
+    PointLight pointLights[3];
+    DirectX::XMFLOAT3 cameraPosition;
+    float pad1;
+    double time;
+    int pointLightCount;
+    float pad2;
 };
 struct PerObjectBuffer {
-	PerObjectBuffer() {
-		ZeroMemory(this, sizeof(this));
-	}
-	DirectX::XMFLOAT4X4 worldMatrix;
-	DirectX::XMFLOAT4X4 worldMatrixInverseTranspose;
-	Material material;
+    PerObjectBuffer() {
+        ZeroMemory(this, sizeof(this));
+    }
+    DirectX::XMFLOAT4X4 worldMatrix;
+    DirectX::XMFLOAT4X4 worldMatrixInverseTranspose;
+    Material material;
 };

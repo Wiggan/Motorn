@@ -4,25 +4,27 @@
 #include "WorldObject.h"
 #include "Component.h"
 #include <vector>
-
+#include <DirectXCollision.h>
+#include "Timer.h"
 class Entity : public WorldObject {
-private:
-	std::vector<WorldObject*> mChildren;
-	bool					mUpdate;
-	Entity*					mParent;
-	std::string 			mName;
+protected:
+    std::vector<Entity*>    mChildren;
+    std::vector<Component*>    mComponents;
+    Entity*                        mParent;
+    std::string                 mName;
+    DirectX::BoundingSphere        mBoundingSphere;
 public:
-							Entity(const std::string &pName);
-							Entity() : Entity("") {}
-							~Entity();
-	void					addComponent(Component* pComponent);
-	void					addEntity(Entity* pEntity);
-	virtual void			update(const float delta, const DirectX::XMFLOAT4X4 &pTransform, const bool parentUpdated);
-	virtual void			draw();
-	void					setPosition(const DirectX::XMFLOAT3 &pPosition);
-	void					setRotation(const DirectX::XMFLOAT3 &pRotation);
-	void					setScale(const DirectX::XMFLOAT3 &pScale);
-	void					setParent(Entity* pParent);
-	DirectX::XMFLOAT4X4&	getTransform();
+                                Entity(const std::string &pName);
+                                Entity() : Entity("") {}
+    virtual                     ~Entity();
+    void                        addComponent(Component* pComponent);
+    void                        addEntity(Entity* pEntity);
+    virtual void                rayCast(const std::vector<Entity*> &pRayCastableEntities);
+    virtual void                update(const float delta, const DirectX::XMFLOAT4X4 &pTransform, const bool parentUpdated);
+    virtual void                draw();
+    void                        setParent(Entity* pParent);
+    DirectX::XMFLOAT4X4&        getTransform();
+    DirectX::BoundingSphere&    getBoundingSphere();
+    virtual void                onRayCastHit(DirectX::XMFLOAT3 pPosition, DirectX::XMFLOAT3 pDirection, float pDistance, Entity* pTarget);
 };
 

@@ -10,11 +10,11 @@
 class Sprite : public Drawable
 {
 private:
-	std::vector<ID3D11ShaderResourceView*> mTextureViews;
+    std::vector<ID3D11ShaderResourceView*> mTextureViews;
 public:
-	Sprite(D3dStuff &stuff, Texture* pTexture);
-	~Sprite();
-	virtual void draw();
-	virtual const DirectX::XMFLOAT4X4& getTransform();
+    Sprite(D3dStuff &stuff, Texture* pTexture);
+    ~Sprite();
+    virtual void draw();
+    //virtual const DirectX::XMFLOAT4X4& getTransform();
 };
 

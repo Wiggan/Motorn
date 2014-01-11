@@ -3,17 +3,20 @@
 #include <DirectXMath.h>
 class WorldObject {
 protected:
-	DirectX::XMFLOAT3	mPosition;
-	DirectX::XMFLOAT3	mRotation;
-	DirectX::XMFLOAT3	mScale;
-	DirectX::XMFLOAT4X4 mTransform;
-	bool				mUpdate;
-						WorldObject();
+    DirectX::XMFLOAT3    mPosition;
+    DirectX::XMFLOAT3    mRotation;
+    DirectX::XMFLOAT3    mScale;
+    DirectX::XMFLOAT4X4 mTransform;
+    bool                mUpdate;
+                        WorldObject();
 public:
-	virtual void		setPosition(const DirectX::XMFLOAT3 &pPosition);
-	virtual void		setRotation(const DirectX::XMFLOAT3 &pRotation);
-	virtual void		setScale(const DirectX::XMFLOAT3 &pScale);
-	virtual void		update(const float delta, const DirectX::XMFLOAT4X4 &pTransform, const bool parentUpdated);
-	virtual void		draw() = 0;//{}
-	virtual				~WorldObject() {}
+    virtual void                setPosition(const DirectX::XMFLOAT3 &pPosition);
+    virtual void                setRotation(const DirectX::XMFLOAT3 &pRotation);
+    virtual void                setScale(const DirectX::XMFLOAT3 &pScale);
+    const DirectX::XMFLOAT3&    getPosition();
+    DirectX::XMFLOAT3           getDirection();
+    DirectX::XMFLOAT3           getWorldPosition();
+    virtual void                update(const float delta, const DirectX::XMFLOAT4X4 &pTransform, const bool parentUpdated);
+    virtual void                draw() {}
+    virtual                     ~WorldObject() {}
 };
