@@ -16,6 +16,7 @@
 #include "Mesh.h"
 #include "Entity.h"
 #include "Structs.h"
+#include "PointLightComponent.h"
 class AbstractGame
 {
 private:
@@ -34,12 +35,14 @@ private:
     int mouseX;
     int mouseY;
 protected:
-    virtual void            setupWorld() = 0;
-    virtual void            update(const double delta) = 0;
-    DirectX::XMFLOAT4X4        mWorldTransform;
-    Entity                    mWorld;
-    std::vector<Entity*>    mRayCastableEntities;
-    D3dStuff                mStuff;
+    virtual void                        setupWorld() = 0;
+    virtual void                        update(const double delta) = 0;
+    DirectX::XMFLOAT4X4                 mWorldTransform;
+    Entity*                             mWorld;
+    std::vector<Entity*>                mRayCastableEntities;
+    std::vector<PointLightComponent*>   mPointLights;
+    DirectionalLight*                   mDirectionalLight;
+    D3dStuff                            mStuff;
 public:
     // function prototypes
     void                initD3D(HWND hWnd);    

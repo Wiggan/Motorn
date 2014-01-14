@@ -1,6 +1,6 @@
 #include "Camera.h"
 #include <iostream>
-
+#include "Util.h"
 Camera* Camera::instance = 0;
 
 using namespace DirectX;
@@ -10,6 +10,7 @@ Camera::Camera()
     std::cout << "Creating the camera..." << std::endl;
     position = XMFLOAT3(0.0f, 0.0f, -3.0f);
     target = XMFLOAT3(0.0f, 0.0f, 0.0f);
+    right = Util::right;
     XMStoreFloat3(&up, XMLoadFloat3(&position) + XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f)));
     std::cout << "Up is: " << up.x << " " << up.y << " " << up.z << std::endl;
 
@@ -61,12 +62,10 @@ void Camera::move( const DIRECTIONS direction, const float distance )
     DirectX::XMFLOAT3 dir; 
     switch ( direction ) {
     case LEFT:
-        XMStoreFloat3( &dir, XMVector3Normalize( XMVector3Cross(XMLoadFloat3( &target ) - XMLoadFloat3( &position ),
-            XMLoadFloat3( &up ) - XMLoadFloat3( &position ) ) ) * distance );
+        XMStoreFloat3(&dir, XMVector3Normalize(XMLoadFloat3(&right) ) * -distance);
         break;
     case RIGHT:
-        XMStoreFloat3( &dir, XMVector3Normalize( XMVector3Cross( XMLoadFloat3( &target ) - XMLoadFloat3( &position ),
-            XMLoadFloat3( &up ) - XMLoadFloat3( &position ) ) ) * -distance );
+        XMStoreFloat3( &dir, XMVector3Normalize( XMLoadFloat3(&right) ) * distance );
         break;
     case FORWARD:
         XMStoreFloat3( &dir, XMVector3Normalize( XMLoadFloat3( &target ) - XMLoadFloat3( &position ) ) * distance );
@@ -99,13 +98,13 @@ void Camera::rotate(const DIRECTIONS direction, float degrees)
     XMMATRIX transformation; 
     switch ( direction ) {
     case PITCH:
-        transformation = XMMatrixRotationAxis(XMVector3Cross(XMLoadFloat3(&look_at_target),
-            XMLoadFloat3(&look_at_up)), XMConvertToRadians(degrees)*0.1f);
+        transformation = XMMatrixRotationAxis(XMLoadFloat3(&right), XMConvertToRadians(degrees)*-0.1f);
         //std::cout << "Up before PITCH transform: " << look_at_up.x << " " << look_at_up.y << " " << look_at_up.z << std::endl;
         break;
     case YAW:
-        transformation = XMMatrixRotationAxis(XMLoadFloat3(&look_at_up), XMConvertToRadians(degrees)*0.1f);
-        //std::cout << "Up before YAW transform: " << look_at_up.x << " " << look_at_up.y << " " << look_at_up.z << std::endl;
+        transformation = XMMatrixRotationY(XMConvertToRadians(degrees)*0.1f);
+        XMStoreFloat3(&right, XMVector3Transform(XMLoadFloat3(&right), transformation));
+        std::cout << "Up before YAW transform: " << right.x << " " << right.y << " " << right.z << std::endl;
         break;
     case ROLL:
         break;
@@ -151,10 +150,10 @@ DirectX::XMFLOAT4X4 Camera::getView() // TODO by reference?
         //XMStoreFloat3(&up, XMLoadFloat3(&position) + XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f)));
         XMStoreFloat4x4(&view, XMMatrixLookAtLH(XMLoadFloat3(&position), XMLoadFloat3(&target),
             XMLoadFloat3(&up) - XMLoadFloat3(&position)));
-        view._31 *= -1;
-        view._32 *= -1;
-        view._33 *= -1;
-        view._34 *= -1;
+        view._31 *= 1;
+        view._32 *= 1;
+        view._33 *= 1;
+        view._34 *= 1;
         XMStoreFloat4x4(&view, XMMatrixTranspose(XMLoadFloat4x4(&view)));
         viewChanged = false;
     }

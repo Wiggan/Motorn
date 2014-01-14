@@ -28,13 +28,17 @@ cbuffer PerObjectBuffer : register(b0)
 };
 cbuffer PerFrameBuffer : register(b1)
 {
-	matrix viewMatrix;
-	matrix projectionMatrix;
-	DirectionalLight directionalLight;
-	PointLight pointLights[3];
-	float3 cameraPosition;
-	double time;
-	int pointLightCount;
+	matrix 					viewMatrix;
+	matrix 					projectionMatrix;
+	DirectionalLight 		directionalLight;
+	PointLight 				pointLights[3];
+	float3 					cameraPosition;
+	float                   fogStart;
+	double 					time;
+	int 					pointLightCount;
+	
+	float                   fogRange;
+    float4       			fogColor;
 };
 
 Texture2D meshTexture;
@@ -114,24 +118,15 @@ float4 PShader(VOut input) : SV_TARGET
 	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	float4 A, D, S;
-	float3 toCamera = normalize(cameraPosition - input.positionW);
+	float3 toCamera = cameraPosition - input.positionW;
+	float distToCamera = length(toCamera);
+	toCamera /= distToCamera;
 	float3 lightDir = normalize(directionalLight.direction);
 	calculateDirectionalLight(toCamera, directionalLight, material, input.normalW.xyz, A, D, S);
 	ambient += A;
 	diffuse += D;
 	specular += S;
-	
-	// PointLight p;
-	// p.ambient = float4(0.1f, 0.1f, 0.1f, 1.0f);
-	// p.diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	// p.specular = float4(0.1f, 1.0f, 0.1f, 110.0f);
-	// p.position = float3(10.0f, 10.0f, 1.0f);
-	// p.attenuation = float3(0.0f, 1.0f, 0.0f);
-	// p.range = 40.0f;
-	// calculatePointLight(toCamera, p, material, input.positionW, input.normalW.xyz, A, D, S);
-		// ambient += A;
-		// diffuse += D;
-		// specular += S;
+
 	for(int i=0; i < pointLightCount; i++) {
 		calculatePointLight(toCamera, pointLights[i], material, input.positionW, input.normalW.xyz, A, D, S);
 		ambient += A;
@@ -141,8 +136,12 @@ float4 PShader(VOut input) : SV_TARGET
 	
 	
 	float4 color = texColor * (ambient + diffuse) + specular;
+	
+	
+	float fogLerp = saturate((distToCamera - fogStart) / fogRange);
+	color = lerp(color, fogColor, fogLerp);
+	
 	color.a = diffuse.a * texColor.a;
-	//color = color*float4(cameraPosition,0.0f);
 	return color;
 
 }

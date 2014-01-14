@@ -38,13 +38,13 @@ DirectX::XMFLOAT3 Util::dir2rot(const DirectX::XMFLOAT3& pDirection) {
     float dx = pDirection.x;
     float dy = pDirection.y;
     float dz = pDirection.z;
-    float yaw = -atan2(dx, -dz);
-    float pitch = atan2(dy, sqrt(dx*dx + dz*dz));
-    XMFLOAT3 result(pitch, yaw, 0.0f);
+    float yaw = -atan2(dx, -dz) - 3.14159265359*0.5f;
+    float pitch = -atan2(dy, sqrt(dx*dx + dz*dz));
+    XMFLOAT3 result( pitch, yaw, 0.0f);
     return result;
 }
 DirectX::XMFLOAT3 Util::dir(const DirectX::XMFLOAT3& pStart, const DirectX::XMFLOAT3& pEnd) {
     XMFLOAT3 direction;
-    XMStoreFloat3(&direction, XMVector3Normalize(XMLoadFloat3(&pStart) - XMLoadFloat3(&pEnd)));
+    XMStoreFloat3(&direction, XMVector3Normalize(XMLoadFloat3(&pEnd) - XMLoadFloat3(&pStart)));
     return direction;
 }

@@ -8,11 +8,10 @@
 #include "Timer.h"
 class Entity : public WorldObject {
 protected:
-    std::vector<Entity*>    mChildren;
-    std::vector<Component*>    mComponents;
-    Entity*                        mParent;
-    std::string                 mName;
-    DirectX::BoundingSphere        mBoundingSphere;
+    std::vector<Entity*>        mChildren;
+    std::vector<Component*>     mComponents;
+    Entity*                     mParent;
+    DirectX::BoundingSphere     mBoundingSphere;
 public:
                                 Entity(const std::string &pName);
                                 Entity() : Entity("") {}

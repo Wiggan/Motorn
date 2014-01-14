@@ -23,7 +23,9 @@ private:
 
     DirectX::XMFLOAT3 position;
     DirectX::XMFLOAT3 up;
+    DirectX::XMFLOAT3 right;
     DirectX::XMFLOAT3 target;
+
 
     float angle = 120.0f; // ~120 degrees
     float nearest = 0.1f;

@@ -10,7 +10,7 @@
 #include <stdlib.h> 
 #include "../Camera.h"
 
-Mesh::Mesh(D3dStuff &stuff, MeshResource* pMeshResource, std::vector<Texture*> pTextures, MaterialResource* pMaterialResource) {
+Mesh::Mesh(const std::string &pName, D3dStuff &stuff, MeshResource* pMeshResource, std::vector<Texture*> pTextures, MaterialResource* pMaterialResource) : Drawable(pName) {
     using namespace DirectX;
     using namespace std;
     dev = stuff.dev;

@@ -1,7 +1,7 @@
 #include "AbstractGame.h"
 #include "Camera.h"
 #include "ResourceLoader.h"
-#include "PointLightResource.h"
+#include "PointLightComponent.h"
 #include "Timer.h"
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -151,7 +151,7 @@ void AbstractGame::initD3D(HWND hWnd)
 
     D3D11_RASTERIZER_DESC rasterizerState;
     rasterizerState.FillMode = D3D11_FILL_SOLID;
-    rasterizerState.CullMode = D3D11_CULL_BACK;
+    rasterizerState.CullMode = D3D11_CULL_FRONT;
     rasterizerState.FrontCounterClockwise = true;
     rasterizerState.DepthBias = 0;
     rasterizerState.DepthBiasClamp = 0;
@@ -166,6 +166,32 @@ void AbstractGame::initD3D(HWND hWnd)
         return;
     }
     devcon->RSSetState(rasterState);
+
+    D3D11_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc;
+    ZeroMemory(&renderTargetBlendDesc, sizeof(renderTargetBlendDesc));
+    renderTargetBlendDesc.BlendEnable = false;
+    renderTargetBlendDesc.SrcBlend = D3D11_BLEND_ZERO;
+    renderTargetBlendDesc.DestBlend = D3D11_BLEND_SRC_COLOR;
+    renderTargetBlendDesc.BlendOp = D3D11_BLEND_OP_ADD;
+    renderTargetBlendDesc.SrcBlendAlpha = D3D11_BLEND_ONE;
+    renderTargetBlendDesc.DestBlendAlpha = D3D11_BLEND_ZERO;
+    renderTargetBlendDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    renderTargetBlendDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_RED | D3D11_COLOR_WRITE_ENABLE_GREEN | D3D11_COLOR_WRITE_ENABLE_BLUE;
+
+
+    D3D11_BLEND_DESC blendDesc;
+    blendDesc.AlphaToCoverageEnable = false;
+    blendDesc.IndependentBlendEnable = false;
+    blendDesc.RenderTarget[0] = renderTargetBlendDesc;
+
+    ID3D11BlendState* blendState;
+    ZeroMemory(&blendState, sizeof(blendState));
+    dev->CreateBlendState(&blendDesc, &blendState);
+
+    float blendFactors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    devcon->OMSetBlendState(blendState, blendFactors,0xffffffff);
+
+
     pipelineInit();
 }
 void AbstractGame::renderFrame(double delta)
@@ -177,7 +203,7 @@ void AbstractGame::renderFrame(double delta)
     timeSinceLastRayCast += delta;
     if ( timeSinceLastRayCast > RAY_CAST_INTERVAL ) {
         timeSinceLastRayCast = 0;
-        mWorld.rayCast(mRayCastableEntities);
+        mWorld->rayCast(mRayCastableEntities);
     }
     Timer::getInstance().update(delta);
     update(delta);
@@ -188,31 +214,19 @@ void AbstractGame::renderFrame(double delta)
     PerFrameBuffer constants;
     constants.projectionMatrix = Camera::getInstance().getProjection();
     constants.viewMatrix = Camera::getInstance().getView();
-    constants.directionalLight.direction = { -1.1f, -1.0f, 0.1f };
-    constants.directionalLight.diffuse = { 0.1f, 0.1f, 0.1f, 1.0f };
-    constants.directionalLight.ambient = { 0.1f, 0.1f, 0.1f, 1.0f };
-    constants.directionalLight.specular = { 0.1f, 0.1f, 0.1f, 1.0f };
-    constants.pointLightCount = 3;
-    PointLightResource p1;
-    PointLightResource p2;
-    PointLightResource p3;
-    p1.setPosition(DirectX::XMFLOAT3(sin(total / 100)*20, 10.0f, 0.0f));
-    p2.setPosition(DirectX::XMFLOAT3(0.0f, sin(total / 200)*20, 10.0f));
-    p3.setPosition(DirectX::XMFLOAT3(1.0f, 0.0f, sin(total / 300)*20));
-    p1.setDiffuse(DirectX::XMFLOAT4(1.0f, 0.1f, 0.1f, 1.0f));
-    p2.setDiffuse(DirectX::XMFLOAT4(0.1f, 1.0f, 0.1f, 1.0f));
-    p3.setDiffuse(DirectX::XMFLOAT4(0.1f, 0.1f, 1.0f, 1.0f));
-    p1.setSpecular(DirectX::XMFLOAT4(1.0f, 0.1f, 0.1f, 1.0f));
-    p2.setSpecular(DirectX::XMFLOAT4(0.1f, 1.0f, 0.1f, 1.0f));
-    p3.setSpecular(DirectX::XMFLOAT4(0.1f, 0.1f, 1.0f, 1.0f));
-    constants.pointLights[0] = p1.getPointLight();
-    constants.pointLights[1] = p2.getPointLight();
-    constants.pointLights[2] = p3.getPointLight();
+    constants.directionalLight = *mDirectionalLight;
+    constants.pointLightCount = mPointLights.size();
+    constants.fogColor = DirectX::XMFLOAT4( 0.7f, 0.7f, 0.7f, 1.0f );
+    constants.fogStart = 5.0f;
+    constants.fogRange = 5.0f;
+    for ( int i = 0; i < constants.pointLightCount && i < 3; i++ ) {
+        constants.pointLights[i] = mPointLights[i]->getPointLight();
+    }
     constants.cameraPosition = Camera::getInstance().getPosition();
     //std::cout << Camera::getInstance().getPosition().x << ", " << Camera::getInstance().getPosition().y << ", " << Camera::getInstance().getPosition().z << ", " << std::endl;
     constants.time = 1234;
     setFrameConstants(constants);
-    mWorld.draw();
+    mWorld->draw();
     swapchain->Present(0, 0);
 }
 void AbstractGame::setFrameConstants(const PerFrameBuffer &constants) {
@@ -226,11 +240,15 @@ void AbstractGame::setFrameConstants(const PerFrameBuffer &constants) {
     HRESULT hr1 = dev->CreateBuffer(&bd, NULL, &buffer);
     if ( FAILED(hr1) ) {
         std::cout << "Failed to create buffer! " << hr1 << std::endl;
+        std::cin.get();
+        exit(1);
     }
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     hr1 = devcon->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if ( FAILED(hr1) ) {
         std::cout << "Failed mapping buffer to mapped resource!" << std::endl;
+        std::cin.get();
+        exit(1);
     }
     memcpy(mappedResource.pData, &constants, sizeof(constants));
     devcon->Unmap(buffer, 0);
@@ -251,7 +269,11 @@ bool AbstractGame::pipelineInit()
     mStuff.dev = dev;
     mStuff.devcon = devcon;
     ResourceLoader::init(mStuff);
-    ResourceLoader::getShader("shaders")->load();
+    if ( !ResourceLoader::getShader("shaders")->load() ) {
+        std::cout << "initial shader loading failed. Exiting";
+        std::cin.get();
+        exit(1);
+    }
 
     SDL_Thread *thread;
 
@@ -261,9 +283,6 @@ bool AbstractGame::pipelineInit()
     if ( NULL == thread ) {
         std::cout << "Failed creating SDL thread for resource checking: " << SDL_GetError() << std::endl;
     }
-
-
-
     return true;
 }
 DirectX::XMINT2 AbstractGame::getWindowSize()

@@ -14,7 +14,7 @@ class Mesh : public Drawable, public MeshResourceListener, public MaterialResour
     std::vector<Texture*>                    mTextures;
     Material*                                mMaterial;
 public:
-    Mesh(D3dStuff &stuff, MeshResource* pMeshResource, std::vector<Texture*> pTextures, MaterialResource* pMaterialResource);
+    Mesh(const std::string &pName, D3dStuff &stuff, MeshResource* pMeshResource, std::vector<Texture*> pTextures, MaterialResource* pMaterialResource);
     ~Mesh();
     virtual void            draw();
     virtual void            onMeshLoaded(MeshResource* pUpdatedMeshResource);

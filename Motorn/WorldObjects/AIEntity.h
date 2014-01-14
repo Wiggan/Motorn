@@ -8,6 +8,6 @@ public:
                     AIEntity(const std::string &pName);
                     ~AIEntity();
     virtual void    update(const float delta, const DirectX::XMFLOAT4X4 &pTransform, const bool parentUpdated);
-
+    void            addWayPoint(DirectX::XMFLOAT3 pPoint);
 };
 

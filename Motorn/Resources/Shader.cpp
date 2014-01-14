@@ -30,7 +30,7 @@ Shader::Shader(D3dStuff &pStuff, const std::string &pFileName) {
     
 }
 
-void Shader::load() {
+bool Shader::load() {
     using namespace std;
     ID3D10Blob *VS, *PS, *error = NULL;
     D3DCompile(shader, size, NULL, NULL, NULL, "VShader", "vs_5_0", 0, 0, &VS, &error);
@@ -40,7 +40,7 @@ void Shader::load() {
         cout << err << endl;
         free(err);
         cout << "Shader loading failed, falling back to standard" << endl;
-        return;
+        return false;
     }
     error = NULL;
     D3DCompile(shader, size, NULL, NULL, NULL, "PShader", "ps_5_0", 0, 0, &PS, &error);
@@ -50,7 +50,7 @@ void Shader::load() {
         cout << err << endl;
         free(err);
         cout << "Shader loading failed, falling back to standard" << endl;
-        return;
+        return false;
     }
     dev->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &mVertexShader);
     devcon->VSSetShader(mVertexShader, 0, 0);
@@ -59,7 +59,7 @@ void Shader::load() {
     ID3D11InputLayout* layout;
     dev->CreateInputLayout(ied, sizeof(ied) / sizeof(*ied), VS->GetBufferPointer(), VS->GetBufferSize(), &layout);
     devcon->IASetInputLayout(layout);
-
+    return true;
 }
 
 Shader::~Shader() {

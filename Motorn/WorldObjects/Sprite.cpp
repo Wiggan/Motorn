@@ -1,13 +1,12 @@
 #include "Sprite.h"
-#include "../Camera.h"
+#include "Camera.h"
 
 
 
-Sprite::Sprite(D3dStuff &stuff, Texture* pTexture)
-{
+Sprite::Sprite(const std::string &pName, D3dStuff &pStuff, Texture* pTexture) : Drawable(pName) {
     using namespace DirectX;
-    dev = stuff.dev;
-    devcon = stuff.devcon;
+    dev = pStuff.dev;
+    devcon = pStuff.devcon;
 
     mTextureViews.push_back(pTexture->getTextureView());
 

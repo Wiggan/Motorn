@@ -1,7 +1,7 @@
 #include "ScopeComponent.h"
 #include "Entity.h"
 #include <iostream>
-ScopeComponent::ScopeComponent(D3dStuff &pStuff) {
+ScopeComponent::ScopeComponent(const std::string &pName, D3dStuff &pStuff) : Component(pName) {
     dev = pStuff.dev;
     devcon = pStuff.devcon;
 }

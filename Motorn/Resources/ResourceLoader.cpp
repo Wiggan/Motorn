@@ -6,6 +6,7 @@ MaterialMap ResourceLoader::mMaterials;
 ShaderMap ResourceLoader::mShaders;
 FilesMap ResourceLoader::mFilesToCheck;
 D3dStuff ResourceLoader::mStuff;
+bool ResourceLoader::mLevelChanged = false;
 
 Texture* ResourceLoader::getTexture(const std::string &pTextureName) {
     using namespace std;
@@ -67,12 +68,21 @@ Shader* ResourceLoader::getShader(const std::string &pShaderName) {
     }
     return shader;
 }
-Drawable** ResourceLoader::getSprite(Texture* pTexture) {
-    Drawable** leak = new Drawable*;
-    (*leak) = new Sprite(mStuff, pTexture);
-    return leak;
+//Drawable** ResourceLoader::getSprite(Texture* pTexture) {
+//    Drawable** leak = new Drawable*;
+//    (*leak) = new Sprite(mStuff, pTexture);
+//    return leak;
+//}
+bool ResourceLoader::isLevelChanged() {
+    if ( mLevelChanged ) {
+        mLevelChanged = false;
+        return true;
+    } 
+    return false;
 }
-
+void ResourceLoader::watchLevel(const std::string &pfileName) {
+    mFilesToCheck.insert(std::pair<FileInfo, TimeStamp>(FileInfo(pfileName, pfileName, LEVEL), getFileTimeStamp(pfileName)));
+}
 void ResourceLoader::init(const D3dStuff &s) {
     mStuff = D3dStuff(s);
 }
@@ -101,6 +111,11 @@ void ResourceLoader::checkForChangedResources() {
                 std::cout << "Mesh changed! Reloading " << it->first.completePath << std::endl;
                 MeshResource* mesh = &mMeshes.find(it->first.name)->second;
                 mesh->reload();
+                break;
+            }
+            case LEVEL: {
+                std::cout << "Mesh changed! Informing listeners " << it->first.completePath << std::endl;
+                mLevelChanged = true;
                 break;
             }
             default:

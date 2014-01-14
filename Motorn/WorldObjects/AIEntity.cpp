@@ -1,21 +1,7 @@
 #include "AIEntity.h"
 #include "Util.h"
-
 AIEntity::AIEntity(const std::string &pName) : Entity(pName){
-    using namespace DirectX;
-    mWayPoints.push_back(XMFLOAT3(0.0f, 0.0f, 5.0f));
-    mWayPoints.push_back(XMFLOAT3(4.0f, 0.0f, 5.0f));
-    mWayPoints.push_back(XMFLOAT3(5.0f, 0.0f, 0.0f));
-    mWayPoints.push_back(XMFLOAT3(4.0f, 1.0f, -5.0f));
-    mWayPoints.push_back(XMFLOAT3(0.0f, 2.0f, -5.0f));
-    mWayPoints.push_back(XMFLOAT3(-4.0f, 3.0f, 0.0f));
-    mWayPoints.push_back(XMFLOAT3(-5.0f, 4.0f, 5.0f));
-    mWayPoints.push_back(XMFLOAT3(0.0f, 5.0f, 5.0f));
-    mWayPoints.push_back(XMFLOAT3(0.0f, 9.0f, 5.0f));
-
 }
-
-
 AIEntity::~AIEntity() {
 }
 void AIEntity::update(const float pDelta, const DirectX::XMFLOAT4X4 &pTransform, const bool pParentUpdated) {
@@ -28,4 +14,7 @@ void AIEntity::update(const float pDelta, const DirectX::XMFLOAT4X4 &pTransform,
     setRotation(rotation);
     setPosition(nextPosition);
     Entity::update(pDelta, pTransform, pParentUpdated);
+}
+void AIEntity::addWayPoint(DirectX::XMFLOAT3 pPoint) {
+    mWayPoints.push_back(pPoint);
 }

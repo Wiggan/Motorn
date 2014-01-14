@@ -1,6 +1,6 @@
 #pragma once
 #include <d3d11.h>
-#include "../Structs.h"
+#include "Structs.h"
 #include <iostream>
 
 class Shader {
@@ -12,7 +12,7 @@ private:
     char* shader;
     unsigned int size;
 public:
-    void load();
+    bool load();
     Shader(D3dStuff &stuff, const std::string &filename);
     ~Shader();
 };

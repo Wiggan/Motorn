@@ -8,9 +8,9 @@ public:
     virtual void onMaterialLoaded(MaterialResource* pUpdatedMaterialResource) = 0;
 };
 class MaterialResource {
-    Material                                mMaterial;
-    std::vector<MaterialResourceListener*>    mListeners;
-    std::string                                mFileName;
+    Material                                    mMaterial;
+    std::vector<MaterialResourceListener*>      mListeners;
+    std::string                                 mFileName;
 public:
                         MaterialResource(const std::string pFileName);
                         ~MaterialResource();

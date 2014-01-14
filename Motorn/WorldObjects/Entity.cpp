@@ -1,7 +1,7 @@
 #include "Entity.h"
 #include "../Camera.h"
 
-Entity::Entity(const std::string &pName) : mName(pName) {
+Entity::Entity(const std::string &pName) : WorldObject(pName) {
     using namespace DirectX;
     std::vector<WorldObject> mChildren;
     mUpdate = true;

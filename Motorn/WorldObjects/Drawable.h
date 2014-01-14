@@ -36,5 +36,6 @@ protected:
         return true;
     }
 public:
+    Drawable(const std::string &pName) : Component(pName) {}
     virtual ~Drawable() {}
 };

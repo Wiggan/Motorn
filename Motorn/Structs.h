@@ -39,15 +39,22 @@ struct PerFrameBuffer {
     PerFrameBuffer() {
         ZeroMemory(this, sizeof(this));
     }
-    DirectX::XMFLOAT4X4 viewMatrix;
-    DirectX::XMFLOAT4X4 projectionMatrix;
-    DirectionalLight directionalLight;
-    PointLight pointLights[3];
-    DirectX::XMFLOAT3 cameraPosition;
-    float pad1;
-    double time;
-    int pointLightCount;
-    float pad2;
+    DirectX::XMFLOAT4X4     viewMatrix;
+
+    DirectX::XMFLOAT4X4     projectionMatrix;
+
+    DirectionalLight        directionalLight;
+
+    PointLight              pointLights[3];
+
+    DirectX::XMFLOAT3       cameraPosition;
+    float                   fogStart;
+
+    double                  time;
+    int                     pointLightCount;
+    float                   fogRange;
+
+    DirectX::XMFLOAT4       fogColor;
 };
 struct PerObjectBuffer {
     PerObjectBuffer() {

@@ -9,7 +9,7 @@ private:
     ID3D11Device                                            *dev;
     ID3D11DeviceContext                                     *devcon;
 public:
-                        ScopeComponent(D3dStuff &stuff);
+                        ScopeComponent(const std::string &pName, D3dStuff &pStuff);
                         ~ScopeComponent();
     virtual void        rayCast(const std::vector<Entity*> &pRayCastableEntities);
 };

@@ -8,7 +8,6 @@
 #include <map>
 #include <string>
 
-
 struct TimeStamp {
 
     bool operator!=(const TimeStamp &other) {
@@ -29,6 +28,7 @@ enum ResourceType {
     MESH,
     TEXTURE,
     MATERIAL,
+    LEVEL,
 };
 
 struct FileInfo {
@@ -54,23 +54,26 @@ typedef std::map<FileInfo, TimeStamp> FilesMap;
 
 
 class ResourceLoader {
-    static MeshResourceMap mMeshes;
-    static TextureMap mTextures;
-    static MaterialMap mMaterials;
-    static ShaderMap mShaders;
-    static FilesMap mFilesToCheck;
-    static TimeStamp getFileTimeStamp(const std::string &pPath);
-    static D3dStuff mStuff;
+    static MeshResourceMap      mMeshes;
+    static TextureMap           mTextures;
+    static MaterialMap          mMaterials;
+    static ShaderMap            mShaders;
+    static FilesMap             mFilesToCheck;
+    static TimeStamp            getFileTimeStamp(const std::string &pPath);
+    static D3dStuff             mStuff;
+    static bool                 mLevelChanged;
 public:
-    static MeshResource* getMeshResource(const std::string &pMeshName);
-    static MaterialResource* getMaterialResource(const std::string &pMaterialName);
-    static Texture* getTexture(const std::string &pTextureName);
-    static Shader* getShader(const std::string &pShaderName);
-    static Drawable** getSprite(Texture* pTexture);
-    static void init(const D3dStuff &pStuff);
-    static void checkForChangedResources();
-    ResourceLoader() {}
-    ~ResourceLoader() {}
+    static MeshResource*        getMeshResource(const std::string &pMeshName);
+    static MaterialResource*    getMaterialResource(const std::string &pMaterialName);
+    static Texture*             getTexture(const std::string &pTextureName);
+    static Shader*              getShader(const std::string &pShaderName);
+    static bool                 isLevelChanged();
+    static void                 watchLevel(const std::string &pfileName);
+    static void                 init(const D3dStuff &pStuff);
+    static void                 checkForChangedResources();
+                                ResourceLoader() {}
+                                ~ResourceLoader() {}
+    //static Drawable** getSprite(Texture* pTexture);
 
 };
 

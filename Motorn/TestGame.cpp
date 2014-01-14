@@ -1,39 +1,45 @@
 #include "TestGame.h"
 #include "ResourceLoader.h"
 #include "ScopeComponent.h"
-
+#include "Camera.h"
 TestGame::TestGame() {
 }
 TestGame::~TestGame() {
 }
 void TestGame::setupWorld() {
     using namespace DirectX;
-    mWorld = Entity("World");
+    std::string level = "..\\assets\\levels\\level01.xml";
+    mLevelResource = new LevelResource(mStuff, level);
+    ResourceLoader::watchLevel(level);
+    mLevelResource->addListener(this);
+    mLevelResource->load();
+    mWorld = mLevelResource->getLevel();
+    mPointLights = mLevelResource->getPointLights();
+    mDirectionalLight = mLevelResource->getDirectionalLight();
+
+
     std::vector<Texture*> textures;
     textures.push_back(ResourceLoader::getTexture("bark"));
-    monkey = new AIEntity("monkey");
-    movingMonkey = new ScopeEntity("movingMonkey");
+    monkey = new Entity("monkey");
     MeshResource* boxMesh = ResourceLoader::getMeshResource("box3");
-    MeshResource* lineMesh = ResourceLoader::getMeshResource("line");
-    monkey->addComponent(new Mesh(mStuff, boxMesh, textures, ResourceLoader::getMaterialResource("box3")));
-    monkey->setPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 6.0f));
-    movingMonkey->setPosition(DirectX::XMFLOAT3(0.0f, 0.0f, -6.0f));
-    movingMonkey->addComponent(new Mesh(mStuff, boxMesh, textures, ResourceLoader::getMaterialResource("box3")));
-    movingMonkey->addComponent(new ScopeComponent(mStuff));
-    movingMonkey->setRayComponent(new Mesh(mStuff, lineMesh, textures, ResourceLoader::getMaterialResource("line")));
-
-
-    mRayCastableEntities.push_back(monkey);
-
-    mWorld.addEntity(monkey);
-    mWorld.addEntity(movingMonkey);
-
+    monkey->addComponent(new Mesh("camera", mStuff, boxMesh, textures, ResourceLoader::getMaterialResource("box3")));
+    monkey->setPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+    //mWorld->addEntity(monkey);
 }
 void TestGame::update(const double delta) {
     static double total = delta;
     total += delta;
-    //movingMonkey->setRotation(DirectX::XMFLOAT3(total / 10000, 0.0f, 0.0f));
-    mWorld.update(delta, mWorldTransform, false);
+    mWorld->update(delta, mWorldTransform, false);
+    monkey->setPosition(Camera::getInstance().getPosition());
+    if ( ResourceLoader::isLevelChanged() ) {
+        mLevelResource->reload();
+    }
+}
+void TestGame::onLevelLoaded(LevelResource* pUpdatedLevelResource) {
+    delete mWorld;
+    mWorld = pUpdatedLevelResource->getLevel();
+    mPointLights = pUpdatedLevelResource->getPointLights();
+    mDirectionalLight = pUpdatedLevelResource->getDirectionalLight();
 }
 int main(int argc, char* argv[]) {
     TestGame game;
