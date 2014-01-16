@@ -24,6 +24,7 @@ public:
     void                        setParent(Entity* pParent);
     DirectX::XMFLOAT4X4&        getTransform();
     DirectX::BoundingSphere&    getBoundingSphere();
+    Component*                  getComponentByName(const std::string &pName);
     virtual void                onRayCastHit(DirectX::XMFLOAT3 pPosition, DirectX::XMFLOAT3 pDirection, float pDistance, Entity* pTarget);
 };
 

@@ -1,6 +1,7 @@
 #include "Entity.h"
 #include "../Camera.h"
-
+#include <iostream>
+#include <algorithm>
 Entity::Entity(const std::string &pName) : WorldObject(pName) {
     using namespace DirectX;
     std::vector<WorldObject> mChildren;
@@ -9,6 +10,14 @@ Entity::Entity(const std::string &pName) : WorldObject(pName) {
     mBoundingSphere = BoundingSphere(mPosition, 2.0f);
 }
 Entity::~Entity() {
+    std::cout << "Removing Entity" << std::endl;
+    for ( auto it = mComponents.begin(); it != mComponents.end(); it++ ) {
+        delete (*it);
+    }
+    mComponents.clear();
+    for ( auto it = mChildren.begin(); it != mChildren.end(); it++ ) {
+        delete (*it);
+    }
     mChildren.clear();
 }
 void Entity::addEntity(Entity* pChild) {
@@ -66,4 +75,12 @@ DirectX::BoundingSphere& Entity::getBoundingSphere() {
 }
 void Entity::onRayCastHit(DirectX::XMFLOAT3 pPosition, DirectX::XMFLOAT3 pDirection, float pDistance, Entity* pTarget) {
 
+}
+Component* Entity::getComponentByName(const std::string &pName) {
+    for ( auto it = mComponents.begin(); it != mComponents.end(); it++ ) {
+        if ( strcmp((*it)->getName().c_str(), pName.c_str()) == 0 ) {
+            return (*it);
+        }
+    }
+    return NULL;
 }

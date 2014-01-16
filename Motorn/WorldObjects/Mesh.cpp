@@ -2,7 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "Sprite.h"
 #include <string>
 #include <sstream>
 #include <algorithm>
@@ -26,6 +25,9 @@ Mesh::Mesh(const std::string &pName, D3dStuff &stuff, MeshResource* pMeshResourc
 }
 Mesh::~Mesh()
 {
+    std::cout << "Removing Mesh" << std::endl;
+    mVertexBuffer->Release();
+    mIndexBuffer->Release();
 }
 void Mesh::draw() {
     using namespace DirectX;

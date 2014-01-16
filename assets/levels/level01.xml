@@ -7,6 +7,7 @@
 		<diffuse r="0.3" g="0.3" b="0.3" a="1.0"></diffuse>
 		<specular r="0.3" g="0.3" b="0.3" a="1.0"></specular>
 	</directionalLight>
+	<raycastable>false</raycastable>
 	<name>world</name>
 	<position x="0" y="0" z="0"></position>
 	<rotation x="0" y="0" z="0"></rotation>
@@ -16,69 +17,39 @@
 		<position x="0" y="0" z="0"></position>
 		<rotation x="0" y="0" z="0"></rotation>
 		<scale x="1" y="1" z="1"></scale>
+		<point x="0" y="0" z="-5"></point>
+		<point x="0" y="0" z="0"></point>
 		<point x="0" y="0" z="5"></point>
-		<point x="5" y="0" z="5"></point>
-		<point x="5" y="0" z="-5"></point>
-		<point x="-5" y="0" z="-5"></point>
+		<point x="0" y="0" z="0"></point>
 		<point x="-5" y="0" z="0"></point>
 		<point x="0" y="0" z="0"></point>
-		<point x="0" y="10" z="0"></point>
+		<point x="5" y="0" z="0"></point>
 		<mesh>
 			<name>monkeymesh</name>
 			<fileName>box3</fileName>
-			<material>box3</material>
+			<material>box3</material> 
 			<texture>bark</texture>
 			<position x="0" y="0" z="0"></position>
-			<rotation x="0" y="0" z="0"></rotation>
+			<rotation x="0" y="0" z="0"></rotation> 
 			<scale x="1" y="1" z="1"></scale>
-		</mesh>
-		<pointLight>
+		</mesh> 
+		<pointLight> 
 			<name>pointLight1</name>
-			<position x="-1.1" y="-1.0" z="0.1"></position>
-			<ambient r="0.3" g="0.3" b="0.3" a="1.0"></ambient>
-			<diffuse r="0.3" g="0.3" b="0.3" a="1.0"></diffuse>
-			<specular r="0.3" g="0.3" b="0.3" a="1.0"></specular>
+			<position x="0" y="0" z="2"></position>
+			<ambient r="0.0" g="0.0" b="0.3" a="1.0"></ambient>
+			<diffuse r="0.0" g="0.0" b="0.9" a="1.0"></diffuse>
+			<specular r="0.0" g="0.0" b="0.3" a="1.0"></specular>
 		</pointLight>
 	</aiEntity>
+
 	<entity>
-		<name>sentry</name>
-		<position x="-10" y="0" z="0"></position>
-		<rotation x="0" y="-2" z="0"></rotation>
-		<scale x="1" y="1" z="1"></scale>
-		<scopeEntity>
-			<name>sentry</name>
-			<mesh>
-				<name>monkey</name>
-				<fileName>box3</fileName>
-				<material>box3</material>
-				<texture>bark</texture>
-				<position x="0" y="0" z="0"></position>
-				<rotation x="0" y="0" z="0"></rotation>
-				<scale x="1" y="1" z="1"></scale>
-			</mesh>
-			<mesh>
-				<name>ray</name>
-				<fileName>line</fileName>
-				<material>line</material>
-				<texture>bark</texture>
-				<position x="0" y="0" z="0"></position>
-				<rotation x="0" y="0" z="0"></rotation>
-				<scale x="1" y="1" z="1"></scale>
-			</mesh>
-			<scopeComponent>
-				<name>scope</name>
-				<position x="0" y="0" z="0"></position>
-				<rotation x="0" y="0" z="0"></rotation>
-				<scale x="1" y="1" z="1"></scale>
-			</scopeComponent>
-		</scopeEntity>
-	</entity>
-	<entity>
-		<name>sentry</name>
+		<name>sentry2</name>
+		<raycastable>false</raycastable>
 		<position x="10" y="0" z="0"></position>
 		<rotation x="0" y="4.5" z="0"></rotation>
 		<scale x="1" y="1" z="1"></scale>
 		<scopeEntity>
+			<raycastable>false</raycastable>
 			<name>sentry</name>
 			<mesh>
 				<name>monkey</name>

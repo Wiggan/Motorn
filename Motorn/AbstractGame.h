@@ -11,7 +11,6 @@
 #include <fstream>
 #include <math.h>
 #include <ctime>
-#include "Sprite.h"
 #include "Vertex.h"
 #include "Mesh.h"
 #include "Entity.h"

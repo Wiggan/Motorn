@@ -4,11 +4,11 @@
 #include <string>
 class WorldObject {
 protected:
+    std::string             mName;
     DirectX::XMFLOAT3       mPosition;
     DirectX::XMFLOAT3       mRotation;
     DirectX::XMFLOAT3       mScale;
     DirectX::XMFLOAT4X4     mTransform;
-    std::string             mName;
     bool                    mUpdate;
                             WorldObject(const std::string &pName);
 public:
@@ -18,6 +18,7 @@ public:
     const DirectX::XMFLOAT3&    getPosition();
     DirectX::XMFLOAT3           getDirection();
     DirectX::XMFLOAT3           getWorldPosition();
+    const std::string&          getName();
     virtual void                update(const float delta, const DirectX::XMFLOAT4X4 &pTransform, const bool parentUpdated);
     virtual void                draw() {}
     virtual                     ~WorldObject() {}

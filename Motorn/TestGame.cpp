@@ -16,7 +16,7 @@ void TestGame::setupWorld() {
     mWorld = mLevelResource->getLevel();
     mPointLights = mLevelResource->getPointLights();
     mDirectionalLight = mLevelResource->getDirectionalLight();
-
+    mRayCastableEntities = mLevelResource->getRayCastableEntities();
 
     std::vector<Texture*> textures;
     textures.push_back(ResourceLoader::getTexture("bark"));
@@ -37,6 +37,8 @@ void TestGame::update(const double delta) {
 }
 void TestGame::onLevelLoaded(LevelResource* pUpdatedLevelResource) {
     delete mWorld;
+    ResourceLoader::reset();
+    mRayCastableEntities = pUpdatedLevelResource->getRayCastableEntities();
     mWorld = pUpdatedLevelResource->getLevel();
     mPointLights = pUpdatedLevelResource->getPointLights();
     mDirectionalLight = pUpdatedLevelResource->getDirectionalLight();

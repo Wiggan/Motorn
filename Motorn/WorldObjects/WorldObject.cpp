@@ -1,10 +1,11 @@
 #include "WorldObject.h"
-
+#include <iostream>
 WorldObject::WorldObject(const std::string &pName) : mName(pName) {
     using namespace DirectX;
     mPosition = XMFLOAT3(0.0f, 0.0f, 0.0f);
     mScale = XMFLOAT3(1.0f, 1.0f, 1.0f);
     mRotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+    XMStoreFloat4x4(&mTransform, XMMatrixIdentity());
 }
 
 void WorldObject::update(const float pDelta, const DirectX::XMFLOAT4X4 &pTransform, const bool pParentUpdated) {
@@ -59,4 +60,7 @@ void WorldObject::setScale(const DirectX::XMFLOAT3 &pScale) {
 }
 const DirectX::XMFLOAT3& WorldObject::getPosition() {
     return mPosition;
+}
+const std::string& WorldObject::getName() {
+    return mName;
 }

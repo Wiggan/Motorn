@@ -169,14 +169,14 @@ void AbstractGame::initD3D(HWND hWnd)
 
     D3D11_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc;
     ZeroMemory(&renderTargetBlendDesc, sizeof(renderTargetBlendDesc));
-    renderTargetBlendDesc.BlendEnable = false;
+    renderTargetBlendDesc.BlendEnable = true;
     renderTargetBlendDesc.SrcBlend = D3D11_BLEND_ZERO;
     renderTargetBlendDesc.DestBlend = D3D11_BLEND_SRC_COLOR;
     renderTargetBlendDesc.BlendOp = D3D11_BLEND_OP_ADD;
     renderTargetBlendDesc.SrcBlendAlpha = D3D11_BLEND_ONE;
     renderTargetBlendDesc.DestBlendAlpha = D3D11_BLEND_ZERO;
     renderTargetBlendDesc.BlendOpAlpha = D3D11_BLEND_OP_ADD;
-    renderTargetBlendDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_RED | D3D11_COLOR_WRITE_ENABLE_GREEN | D3D11_COLOR_WRITE_ENABLE_BLUE;
+    renderTargetBlendDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL; //D3D11_COLOR_WRITE_ENABLE_RED | D3D11_COLOR_WRITE_ENABLE_GREEN | D3D11_COLOR_WRITE_ENABLE_BLUE;
 
 
     D3D11_BLEND_DESC blendDesc;
@@ -216,9 +216,9 @@ void AbstractGame::renderFrame(double delta)
     constants.viewMatrix = Camera::getInstance().getView();
     constants.directionalLight = *mDirectionalLight;
     constants.pointLightCount = mPointLights.size();
-    constants.fogColor = DirectX::XMFLOAT4( 0.7f, 0.7f, 0.7f, 1.0f );
-    constants.fogStart = 5.0f;
-    constants.fogRange = 5.0f;
+    constants.fogColor = DirectX::XMFLOAT4( 0.5f, 0.5f, 0.5f, 1.0f );
+    constants.fogStart = 10.0f;
+    constants.fogRange = 50.0f;
     for ( int i = 0; i < constants.pointLightCount && i < 3; i++ ) {
         constants.pointLights[i] = mPointLights[i]->getPointLight();
     }
@@ -373,7 +373,7 @@ void AbstractGame::startGame() {
                     }
                     break;
                 case SDL_MOUSEBUTTONDOWN:
-                    //Camera::getInstance().setTarget(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+                    Camera::getInstance().setTarget(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
                     break;
                 case SDL_MOUSEMOTION:
                     float xrel = (float)e.motion.xrel;

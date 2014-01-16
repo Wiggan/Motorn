@@ -61,6 +61,7 @@ bool MaterialResource::load() {
     return true;
 }
 MaterialResource::~MaterialResource() {
+    std::cout << "Removing MaterialResource" << std::endl;
 }
 Material* MaterialResource::getMaterial() {
     return &mMaterial;

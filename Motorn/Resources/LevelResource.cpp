@@ -6,6 +6,8 @@
 LevelResource::LevelResource(const D3dStuff &pStuff, const std::string pFileName) : mFileName(pFileName), mStuff(pStuff) {
 }
 bool LevelResource::reload() {
+    mRayCastableEntities.clear();
+    mPointLights.clear();
     if ( load() ) {
         mListener->onLevelLoaded(this);
         return true;
@@ -59,11 +61,11 @@ ScopeEntity* LevelResource::createScopeEntity(const tinyxml2::XMLNode* node) {
     using namespace DirectX;
     ScopeEntity* entity = new ScopeEntity(node->FirstChildElement("name")->GetText());
     fillEntity(node, entity);
-    for ( const XMLElement* child = node->FirstChildElement(); child != NULL; child = child->NextSiblingElement() ) {
-        if ( strcmp("mesh", child->Name()) == 0 && strcmp("ray", child->FirstChildElement("name")->GetText()) == 0 ) {
-            entity->setRayComponent(createMesh(child));
-        } 
-    }
+    Component* ray = entity->getComponentByName("ray");
+    if (ray != NULL ) {
+        entity->setRayComponent(ray);
+    } 
+    
     return entity;
 }
 PointLightComponent* LevelResource::createPointLight(const tinyxml2::XMLNode* node) {
@@ -133,6 +135,7 @@ void LevelResource::fillEntity(const tinyxml2::XMLNode* node, Entity* entity) {
     using namespace tinyxml2;
     using namespace DirectX;
     fillWorldObject(node, entity);
+    bool raycastable = true;
     for ( const XMLElement* child = node->FirstChildElement(); child != NULL; child = child->NextSiblingElement() ) {
         if ( strcmp("entity", child->Name()) == 0 ) {
             entity->addEntity(createEntity(child));
@@ -146,8 +149,14 @@ void LevelResource::fillEntity(const tinyxml2::XMLNode* node, Entity* entity) {
             entity->addEntity(createAIEntity(child));
         } else if ( strcmp("scopeComponent", child->Name()) == 0 ) {
             entity->addComponent(createScopeComponent(child));
-        }
+        } else if ( strcmp("raycastable", child->Name()) == 0 ) {
+            child->QueryBoolText(&raycastable);
+        } 
     }
+    if ( raycastable ) {
+        mRayCastableEntities.push_back(entity);
+    }
+   
 }
 void LevelResource::fillWorldObject(const tinyxml2::XMLNode* node, WorldObject* obj) {
     using namespace tinyxml2;
@@ -191,3 +200,9 @@ std::vector<PointLightComponent*> LevelResource::getPointLights() {
 DirectionalLight* LevelResource::getDirectionalLight() {
     return mDirectionalLight;
 }
+std::vector<Entity*> LevelResource::getRayCastableEntities() {
+    return mRayCastableEntities;
+}
+
+
+

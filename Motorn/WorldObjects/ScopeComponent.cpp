@@ -12,6 +12,7 @@ void ScopeComponent::rayCast(const std::vector<Entity*> &pRayCastableEntities) {
     for ( auto it = pRayCastableEntities.begin(); it != pRayCastableEntities.end(); it++ ) {
         if ( mOwner != *it ) {
             float distance;
+            
             if ( (*it)->getBoundingSphere().Intersects(XMLoadFloat3(&getWorldPosition()), XMVector3Normalize(XMLoadFloat3(&getDirection())), distance) ) {
                 mOwner->onRayCastHit(getWorldPosition(), getDirection(), distance, (*it));
                /* std::cout << "RayCast hit! Distance: " << distance << " from Position " << 

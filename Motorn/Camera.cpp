@@ -104,7 +104,7 @@ void Camera::rotate(const DIRECTIONS direction, float degrees)
     case YAW:
         transformation = XMMatrixRotationY(XMConvertToRadians(degrees)*0.1f);
         XMStoreFloat3(&right, XMVector3Transform(XMLoadFloat3(&right), transformation));
-        std::cout << "Up before YAW transform: " << right.x << " " << right.y << " " << right.z << std::endl;
+        //std::cout << "Up before YAW transform: " << right.x << " " << right.y << " " << right.z << std::endl;
         break;
     case ROLL:
         break;
@@ -136,7 +136,7 @@ void Camera::setTarget(const DirectX::XMFLOAT3 &newTarget)
     {
         XMFLOAT3 axis;
         XMStoreFloat3(&axis, XMVector3Cross(XMLoadFloat3(&old_look_at_target), XMLoadFloat3(&new_look_at_target)));
-        //rotate(axis, angle);
+        //rotate(&axis, angle);
     }
     target.x = newTarget.x;
     target.y = newTarget.y;
@@ -148,13 +148,8 @@ DirectX::XMFLOAT4X4 Camera::getView() // TODO by reference?
 {
     if (viewChanged) {
         //XMStoreFloat3(&up, XMLoadFloat3(&position) + XMLoadFloat3(&XMFLOAT3(0.0f, 1.0f, 0.0f)));
-        XMStoreFloat4x4(&view, XMMatrixLookAtLH(XMLoadFloat3(&position), XMLoadFloat3(&target),
-            XMLoadFloat3(&up) - XMLoadFloat3(&position)));
-        view._31 *= 1;
-        view._32 *= 1;
-        view._33 *= 1;
-        view._34 *= 1;
-        XMStoreFloat4x4(&view, XMMatrixTranspose(XMLoadFloat4x4(&view)));
+        XMStoreFloat4x4(&view, XMMatrixTranspose(XMMatrixLookAtLH(XMLoadFloat3(&position), XMLoadFloat3(&target),
+            XMLoadFloat3(&up) - XMLoadFloat3(&position))));
         viewChanged = false;
     }
     return view;
@@ -163,7 +158,6 @@ DirectX::XMFLOAT4X4 Camera::getView() // TODO by reference?
 DirectX::XMFLOAT4X4 Camera::getProjection()
 {
     if (projectionChanged) {
-
         XMStoreFloat4x4(&projection, XMMatrixPerspectiveFovLH(angle, width / height,
             nearest, farthest));
         XMStoreFloat4x4(&projection, XMMatrixTranspose(XMLoadFloat4x4(&projection)));

@@ -31,12 +31,14 @@ private:
     void                                fillEntity(const tinyxml2::XMLNode* node, Entity* obj);
     D3dStuff                            mStuff;
     std::vector<PointLightComponent*>   mPointLights;
+    std::vector<Entity*>                mRayCastableEntities;
     DirectionalLight*                   mDirectionalLight;
 public:
                                         LevelResource(const D3dStuff &pStuff, const std::string pFileName);
                                         ~LevelResource();
     Entity*                             getLevel();
     std::vector<PointLightComponent*>   getPointLights();
+    std::vector<Entity*>                getRayCastableEntities();
     DirectionalLight*                   getDirectionalLight();
     bool                                load();
     bool                                reload();

@@ -103,7 +103,6 @@
     <ClInclude Include="Resources\ResourceLoader.h" />
     <ClInclude Include="AbstractGame.h" />
     <ClInclude Include="Resources\Shader.h" />
-    <ClInclude Include="WorldObjects\Sprite.h" />
     <ClInclude Include="WorldObjects\WorldObject.h" />
     <ClInclude Include="Structs.h" />
     <ClInclude Include="TestGame.h" />
@@ -128,7 +127,6 @@
     <ClCompile Include="Resources\ResourceLoader.cpp" />
     <ClCompile Include="AbstractGame.cpp" />
     <ClCompile Include="Resources\Shader.cpp" />
-    <ClCompile Include="WorldObjects\Sprite.cpp" />
     <ClCompile Include="TestGame.cpp" />
     <ClCompile Include="Resources\Texture.cpp" />
     <ClCompile Include="WorldObjects\WorldObject.cpp" />

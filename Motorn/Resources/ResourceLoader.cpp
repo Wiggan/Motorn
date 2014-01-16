@@ -68,11 +68,6 @@ Shader* ResourceLoader::getShader(const std::string &pShaderName) {
     }
     return shader;
 }
-//Drawable** ResourceLoader::getSprite(Texture* pTexture) {
-//    Drawable** leak = new Drawable*;
-//    (*leak) = new Sprite(mStuff, pTexture);
-//    return leak;
-//}
 bool ResourceLoader::isLevelChanged() {
     if ( mLevelChanged ) {
         mLevelChanged = false;
@@ -86,9 +81,10 @@ void ResourceLoader::watchLevel(const std::string &pfileName) {
 void ResourceLoader::init(const D3dStuff &s) {
     mStuff = D3dStuff(s);
 }
-
-
-
+void ResourceLoader::reset() {
+    //mMaterials.clear();
+    mMeshes.clear();
+}
 void ResourceLoader::checkForChangedResources() {
     for ( auto it = mFilesToCheck.begin(); it != mFilesToCheck.end(); it++ ) {
         TimeStamp now = getFileTimeStamp(it->first.completePath);

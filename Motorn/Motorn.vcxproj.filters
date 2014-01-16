@@ -39,9 +39,6 @@
     <ClInclude Include="WorldObjects\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WorldObjects\Sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="WorldObjects\WorldObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -102,9 +99,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WorldObjects\Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WorldObjects\Sprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WorldObjects\Entity.cpp">

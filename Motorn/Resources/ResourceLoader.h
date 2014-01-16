@@ -1,6 +1,5 @@
 #pragma once
 #include "MeshResource.h"
-#include "Sprite.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "MaterialResource.h"
@@ -45,7 +44,6 @@ struct FileInfo {
     ResourceType type;
 };
 
-typedef std::unordered_map<std::string, Drawable**> DrawableMap;
 typedef std::unordered_map<std::string, MeshResource> MeshResourceMap;
 typedef std::unordered_map<std::string, Texture*> TextureMap;
 typedef std::unordered_map<std::string, MaterialResource> MaterialMap;
@@ -73,6 +71,7 @@ public:
     static void                 checkForChangedResources();
                                 ResourceLoader() {}
                                 ~ResourceLoader() {}
+    static void                 reset();
     //static Drawable** getSprite(Texture* pTexture);
 
 };
