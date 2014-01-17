@@ -6,7 +6,7 @@ AIEntity::~AIEntity() {
 }
 void AIEntity::update(const float pDelta, const DirectX::XMFLOAT4X4 &pTransform, const bool pParentUpdated) {
     using namespace DirectX;
-    XMFLOAT3 nextPosition = Util::bez(mWayPoints, 0.5f*(1 - cos(Timer::getInstance().getElapsed() / 1000)), false);
+    XMFLOAT3 nextPosition = Util::lerp(mWayPoints, 0.5f*(1 - cos(Timer::getInstance().getElapsed() / 8000)), false);
     XMFLOAT3 rotation = Util::dir2rot(Util::dir(getPosition(), nextPosition));
     setRotation(rotation);
     setPosition(nextPosition);

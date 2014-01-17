@@ -75,9 +75,19 @@ PointLightComponent* LevelResource::createPointLight(const tinyxml2::XMLNode* no
     const XMLElement* ambientNode = node->FirstChildElement("ambient");
     const XMLElement* diffuseNode = node->FirstChildElement("diffuse");
     const XMLElement* specularNode = node->FirstChildElement("specular");
+    const XMLElement* attenuationNode = node->FirstChildElement("attenuation");
+    const XMLElement* rangeNode = node->FirstChildElement("range");
     PointLightComponent* light = new PointLightComponent(node->FirstChildElement("name")->GetText());
     if ( positionNode != NULL ) {
         light->setPosition(createVector(positionNode));
+    }
+    if ( rangeNode != NULL ) {
+        float range;
+        rangeNode->QueryFloatText(&range);
+        light->setRange(range);
+    }
+    if ( attenuationNode != NULL ) {
+        light->setAttenuation(createVector(attenuationNode));
     }
     if ( ambientNode != NULL ) {
         light->setAmbient(createColor(ambientNode));

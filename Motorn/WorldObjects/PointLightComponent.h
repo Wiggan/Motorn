@@ -11,5 +11,7 @@ public:
     void        setAmbient(const DirectX::XMFLOAT4 &pAmbient);
     void        setSpecular(const DirectX::XMFLOAT4 &pSpecular);
     void        setDiffuse(const DirectX::XMFLOAT4 &pDiffuse);
+    void        setAttenuation(const DirectX::XMFLOAT3 &pAttenuation);
+    void        setRange(float pRange);
 };
 

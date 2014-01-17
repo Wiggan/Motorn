@@ -17,10 +17,15 @@ MeshResource::MeshResource(D3dStuff &pStuff, const std::string &pFileName)
     dev = pStuff.dev;
     devcon = pStuff.devcon;
     mFileName = pFileName;
+    mLoaded = false;
 }
 
 MeshResource::~MeshResource()
 {
+    /*if ( mLoaded ) {
+        mVertexBuffer->Release();
+        mIndexBuffer->Release();
+    }*/
 }
 
 void MeshResource::addListener(MeshResourceListener* pListener) {
@@ -167,6 +172,7 @@ bool MeshResource::load() {
         }
         memcpy(ims.pData, &vertexIndices[0], sizeof(uint16_t)* vertexIndices.size());
         devcon->Unmap(mIndexBuffer, NULL);
+        mLoaded = true;
     } else {
         cout << "File " << mFileName << " not found!" << endl;
         return false;

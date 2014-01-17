@@ -27,3 +27,9 @@ void PointLightComponent::setDiffuse(const DirectX::XMFLOAT4 &pDiffuse) {
 void PointLightComponent::setSpecular(const DirectX::XMFLOAT4 &pSpecular) {
     mPointLight.specular = pSpecular;
 }
+void PointLightComponent::setAttenuation(const DirectX::XMFLOAT3 &pAttenuation) {
+    mPointLight.attenuation = pAttenuation;
+}
+void PointLightComponent::setRange(float pRange) {
+    mPointLight.range = pRange;
+}

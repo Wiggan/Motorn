@@ -21,6 +21,7 @@ class MeshResource
     int                                    mIndexCount;
     std::vector<MeshResourceListener*>    mListeners;
     std::string                            mFileName;
+    bool                                   mLoaded;
 public:
                     MeshResource(D3dStuff &pStuff, const std::string &pFileName);
                     ~MeshResource();

@@ -10,7 +10,7 @@ bool ResourceLoader::mLevelChanged = false;
 
 Texture* ResourceLoader::getTexture(const std::string &pTextureName) {
     using namespace std;
-    string fileName = "..\\assets\\textures\\" + pTextureName + ".bmp";
+    string fileName = "..\\assets\\textures\\" + pTextureName + ".png";
     TextureMap::iterator it = mTextures.find(pTextureName);
     Texture* texture;
     if ( it == mTextures.end() ) {

@@ -26,8 +26,8 @@ Mesh::Mesh(const std::string &pName, D3dStuff &stuff, MeshResource* pMeshResourc
 Mesh::~Mesh()
 {
     std::cout << "Removing Mesh" << std::endl;
-    mVertexBuffer->Release();
-    mIndexBuffer->Release();
+    //mVertexBuffer->Release();
+    //mIndexBuffer->Release();
 }
 void Mesh::draw() {
     using namespace DirectX;
@@ -53,4 +53,7 @@ void Mesh::onMeshLoaded(MeshResource* pUpdatedMeshResource) {
 }
 void Mesh::onMaterialLoaded(MaterialResource* pUpdatedMaterialResource) {
     mMaterial = pUpdatedMaterialResource->getMaterial();
+}
+Material* Mesh::getMaterial() {
+    return mMaterial;
 }

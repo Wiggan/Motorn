@@ -151,15 +151,15 @@ void AbstractGame::initD3D(HWND hWnd)
 
     D3D11_RASTERIZER_DESC rasterizerState;
     rasterizerState.FillMode = D3D11_FILL_SOLID;
-    rasterizerState.CullMode = D3D11_CULL_FRONT;
-    rasterizerState.FrontCounterClockwise = true;
+    rasterizerState.CullMode = D3D11_CULL_BACK;
+    rasterizerState.FrontCounterClockwise = false;
     rasterizerState.DepthBias = 0;
     rasterizerState.DepthBiasClamp = 0;
     rasterizerState.SlopeScaledDepthBias = 0;
     rasterizerState.DepthClipEnable = true;
     rasterizerState.ScissorEnable = false;
-    rasterizerState.MultisampleEnable = false;
-    rasterizerState.AntialiasedLineEnable = false;
+    rasterizerState.MultisampleEnable = true;
+    rasterizerState.AntialiasedLineEnable = true;
     hr = dev->CreateRasterizerState(&rasterizerState, &rasterState);
     if ( FAILED(hr) ) {
         std::cout << "Failed to create raster state! " << hr << std::endl;
@@ -167,7 +167,7 @@ void AbstractGame::initD3D(HWND hWnd)
     }
     devcon->RSSetState(rasterState);
 
-    D3D11_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc;
+    D3D11_RENDER_TARGET_BLEND_DESC renderTargetBlendDesc; 
     ZeroMemory(&renderTargetBlendDesc, sizeof(renderTargetBlendDesc));
     renderTargetBlendDesc.BlendEnable = true;
     renderTargetBlendDesc.SrcBlend = D3D11_BLEND_ZERO;
@@ -184,12 +184,10 @@ void AbstractGame::initD3D(HWND hWnd)
     blendDesc.IndependentBlendEnable = false;
     blendDesc.RenderTarget[0] = renderTargetBlendDesc;
 
-    ID3D11BlendState* blendState;
     ZeroMemory(&blendState, sizeof(blendState));
     dev->CreateBlendState(&blendDesc, &blendState);
 
-    float blendFactors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-    devcon->OMSetBlendState(blendState, blendFactors,0xffffffff);
+    
 
 
     pipelineInit();
@@ -227,6 +225,10 @@ void AbstractGame::renderFrame(double delta)
     constants.time = 1234;
     setFrameConstants(constants);
     mWorld->draw();
+    float blendFactors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+    devcon->OMSetBlendState(blendState, blendFactors,0xffffffff);
+    mWorld->drawTransparent();
+    devcon->OMSetBlendState(NULL, blendFactors, 0xffffffff);
     swapchain->Present(0, 0);
 }
 void AbstractGame::setFrameConstants(const PerFrameBuffer &constants) {
@@ -373,7 +375,7 @@ void AbstractGame::startGame() {
                     }
                     break;
                 case SDL_MOUSEBUTTONDOWN:
-                    Camera::getInstance().setTarget(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+                    //Camera::getInstance().setTarget(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
                     break;
                 case SDL_MOUSEMOTION:
                     float xrel = (float)e.motion.xrel;

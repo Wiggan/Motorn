@@ -44,7 +44,10 @@ cbuffer PerFrameBuffer : register(b1)
 Texture2D meshTexture;
 
 SamplerState samplerState0 {
-	Filter = MIN_MAG_MIP_LINEAR;
+	Filter = ANISOTROPIC;
+	MaxAnisotropy = 4;
+	AddressU = WRAP;
+	AdressV = WRAP;
 };
 
 struct VOut

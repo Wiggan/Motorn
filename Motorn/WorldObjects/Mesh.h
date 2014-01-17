@@ -19,5 +19,6 @@ public:
     virtual void            draw();
     virtual void            onMeshLoaded(MeshResource* pUpdatedMeshResource);
     virtual void            onMaterialLoaded(MaterialResource* pUpdatedMaterialResource);
+    Material*               getMaterial();
 };
 

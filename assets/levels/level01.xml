@@ -3,9 +3,9 @@
 <entity>
 	<directionalLight>
 		<direction x="-1.1" y="-1.0" z="0.1"></direction>
-		<ambient r="0.3" g="0.3" b="0.3" a="1.0"></ambient>
-		<diffuse r="0.3" g="0.3" b="0.3" a="1.0"></diffuse>
-		<specular r="0.3" g="0.3" b="0.3" a="1.0"></specular>
+		<ambient r="0.1" g="0.1" b="0.1" a="1.0"></ambient>
+		<diffuse r="0.2" g="0.2" b="0.2" a="1.0"></diffuse>
+		<specular r="0.05" g="0.05" b="0.05" a="1.0"></specular>
 	</directionalLight>
 	<raycastable>false</raycastable>
 	<name>world</name>
@@ -17,17 +17,17 @@
 		<position x="0" y="0" z="0"></position>
 		<rotation x="0" y="0" z="0"></rotation>
 		<scale x="1" y="1" z="1"></scale>
-		<point x="0" y="0" z="-5"></point>
-		<point x="0" y="0" z="0"></point>
-		<point x="0" y="0" z="5"></point>
-		<point x="0" y="0" z="0"></point>
-		<point x="-5" y="0" z="0"></point>
-		<point x="0" y="0" z="0"></point>
-		<point x="5" y="0" z="0"></point>
+		<point x="-10" y="0" z="17.32"></point>
+		<point x="10" y="0" z="17.32"></point>
+		<point x="-20" y="0" z="0"></point>
+		<point x="-10" y="0" z="-17.32"></point>
+		<point x="10" y="0" z="-17.32"></point>
+		<point x="20" y="0" z="0"></point>
+		<point x="-10" y="0" z="17.32"></point>
 		<mesh>
 			<name>monkeymesh</name>
 			<fileName>box3</fileName>
-			<material>box3</material> 
+			<material>line</material> 
 			<texture>bark</texture>
 			<position x="0" y="0" z="0"></position>
 			<rotation x="0" y="0" z="0"></rotation> 
@@ -36,17 +36,19 @@
 		<pointLight> 
 			<name>pointLight1</name>
 			<position x="0" y="0" z="2"></position>
-			<ambient r="0.0" g="0.0" b="0.3" a="1.0"></ambient>
-			<diffuse r="0.0" g="0.0" b="0.9" a="1.0"></diffuse>
-			<specular r="0.0" g="0.0" b="0.3" a="1.0"></specular>
+			<ambient r="0.3" g="0.3" b="0.3" a="1.0"></ambient>
+			<diffuse r="0.4" g="0.4" b="0.4" a="1.0"></diffuse>
+			<specular r="0.3" g="0.3" b="0.3" a="1.0"></specular>
+			<attenuation x="0" y="0.1" z="1" ></attenuation>
+			<range>100</range>
 		</pointLight>
 	</aiEntity>
 
 	<entity>
 		<name>sentry2</name>
 		<raycastable>false</raycastable>
-		<position x="10" y="0" z="0"></position>
-		<rotation x="0" y="4.5" z="0"></rotation>
+		<position x="10" y="0" z="17.32"></position>
+		<rotation x="0" y="0" z="0"></rotation>
 		<scale x="1" y="1" z="1"></scale>
 		<scopeEntity>
 			<raycastable>false</raycastable>
@@ -64,7 +66,7 @@
 				<name>ray</name>
 				<fileName>line</fileName>
 				<material>line</material>
-				<texture>bark</texture>
+				<texture>laser</texture>
 				<position x="0" y="0" z="0"></position>
 				<rotation x="0" y="0" z="0"></rotation>
 				<scale x="1" y="1" z="1"></scale>
@@ -76,5 +78,75 @@
 				<scale x="1" y="1" z="1"></scale>
 			</scopeComponent>
 		</scopeEntity>
+	</entity>
+	<entity>
+		<name>map</name>
+		<raycastable>false</raycastable>
+		<position x="0" y="0" z="0"></position>
+		<rotation x="0" y="4.5" z="0"></rotation>
+		<scale x="1" y="1" z="1"></scale>
+		<mesh>
+			<name>tile</name>
+			<fileName>hexa01</fileName>
+			<material>hexa01</material>
+			<texture>metal2</texture>
+			<position x="0" y="-10" z="0"></position>
+			<rotation x="0" y="0" z="0"></rotation>
+			<scale x="1" y="1" z="1"></scale>
+		</mesh>
+		<mesh>
+			<name>tile</name>
+			<fileName>hexa01</fileName>
+			<material>hexa01</material>
+			<texture>metal2</texture>
+			<position x="17.32" y="-10" z="30"></position>
+			<rotation x="0" y="0" z="0"></rotation>
+			<scale x="1" y="1" z="1"></scale>
+		</mesh>
+		<mesh>
+			<name>tile</name>
+			<fileName>hexa01</fileName>
+			<material>hexa01</material>
+			<texture>metal2</texture>
+			<position x="-17.32" y="-10" z="30"></position>
+			<rotation x="0" y="0" z="0"></rotation>
+			<scale x="1" y="1" z="1"></scale>
+		</mesh>
+		<mesh>
+			<name>tile</name>
+			<fileName>hexa01</fileName>
+			<material>hexa01</material>
+			<texture>metal2</texture>
+			<position x="34.64" y="-10" z="0"></position>
+			<rotation x="0" y="0" z="0"></rotation>
+			<scale x="1" y="1" z="1"></scale>
+		</mesh>
+		<mesh>
+			<name>tile</name>
+			<fileName>hexa01</fileName>
+			<material>hexa01</material>
+			<texture>metal2</texture>
+			<position x="-34.64" y="-10" z="0"></position>
+			<rotation x="0" y="0" z="0"></rotation>
+			<scale x="1" y="1" z="1"></scale>
+		</mesh>
+		<mesh>
+			<name>tile</name>
+			<fileName>hexa01</fileName>
+			<material>hexa01</material>
+			<texture>metal2</texture>
+			<position x="17.32" y="-10" z="-30"></position>
+			<rotation x="0" y="0" z="0"></rotation>
+			<scale x="1" y="1" z="1"></scale>
+		</mesh>
+		<mesh>
+			<name>tile</name>
+			<fileName>hexa01</fileName>
+			<material>hexa01</material>
+			<texture>metal2</texture>
+			<position x="-17.32" y="-10" z="-30"></position>
+			<rotation x="0" y="0" z="0"></rotation>
+			<scale x="1" y="1" z="1"></scale>
+		</mesh>
 	</entity>
 </entity>

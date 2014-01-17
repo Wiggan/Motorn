@@ -30,6 +30,7 @@ private:
     ID3D11Texture2D* depthStencilBuffer;
     ID3D11DepthStencilState* depthStencilState;
     ID3D11DepthStencilView* depthStencilView;
+    ID3D11BlendState* blendState;
     HWND hwnd;
     int mouseX;
     int mouseY;
